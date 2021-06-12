@@ -1,12 +1,20 @@
 
 class Task {
-    constructor(title, description, dueDate, priority, isComplete = false, tags = new Set()) {
+    constructor(title, description, dueDate, priority, tags = new Set(), isComplete = false) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
-        this.isComplete = isComplete;
         this.tags = tags;
+        this.isComplete = isComplete;
+    }
+
+    set tags(value) {
+        this._tags = new Set(value);
+    }
+
+    get tags() {
+        return this._tags;
     }
 
     addTags(tags) {
