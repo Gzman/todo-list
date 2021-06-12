@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ToDo App</title>
+    <link rel="stylesheet" href="./main.css" />
+  </head>
+  <body>
+    <header>
+      <h1 class="logo">To-Do</h1>
+      <div class="global-filter">
+        <input type="text" id="global-filter-text" placeholder="Search Tasks" />
+        <button class="filter-btn" id="global-filter-tag">Tags</button>
+        <button class="filter-btn" id="global-filter-projects">
+          Completed
+        </button>
+      </div>
+    </header>
+    <main>
+      <div class="project-list-view">
+        <div class="projects-filter">
+          <button class="projects-inbox-btn">Inbox</button>
+          <button class="projects-today-btn">Today</button>
+          <button class="projects-week-btn">Week</button>
+          <button class="projects-month-btn">Month</button>
+        </div>
+        <div class="projects-user-created">
+          <div class="projects-items"></div>
+          <button class="projects-add-btn">Add Project</button>
+        </div>
+      </div>
+      <div class="filter-view-and-project-view-container">
+        <div class="content"></div>
+      </div>
+    </main>
+
+    <!-- Current Project View-->
+    <div class="current-project">
+      <!-- Show 2/6 (how many task are completed) -->
+      <h2 class="current-project-name">Name</h2>
+      <div class="current-project-ctrls">
+        <button class="current-project-create-btn">Create Task</button>
+        <button class="current-project-delete-btn">Delete Project</button>
+        <button class="current-project-completed-btn filter-btn">
+          Completed Tasks
+        </button>
+        <select class="current-project-sort"></select>
+      </div>
+      <div class="current-project-task-items">
+        <!-- 
+                <div class="task-item " data-project="" data-task="">
+                    <input type="checkbox" class="task-item-complete">
+                    <p class="task-item-name"></p>
+                    <div class="task-ctrls">
+                        <button class="task-item-edit">Edit Task</button>
+                        <button class="task-item-delete">Delete Task</button>
+                    </div>
+                    <p class="task-item-date"></p>
+                </div>
+            -->
+      </div>
+    </div>
+
+    <!-- Current Filter View -->
+    <div class="current-filter">
+      <h2 class="current-filter-name">Current Filter</h2>
+      <div class="current-filter-project-items">
+        <!-- 
+                <div class="project-item">
+                    <h2 class="project-item-name"></h2> -> make clickable -> switch to current-project
+                    <task-item ... same as in current-project>
+                </div>
+            -->
+      </div>
+    </div>
+
+    <!-- New Project lightbox-->
+    <div class="new-project-container">
+      <div class="new-project-lightbox">
+        <h2 class="new-project-title">New Project</h2>
+        <form id="project-form">
+          <div>
+            <label for="project-name-input">Name</label>
+            <input id="project-name-input" type="text" />
+          </div>
+          <div>
+            <button class="new-project-cancel-btn cancel-btn">Cancel</button>
+            <button class="new-project-create-btn ok-btn">
+              Create Project
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- New Task lightbox-->
+    <div class="new-task-container">
+      <div class="new-task-lightbox">
+        <h2 class="new-task-title">New Task</h2>
+        <div class="task-feedback"></div>
+        <form id="task-form">
+          <div>
+            <label for="task-name-input">Name</label>
+            <input id="task-name-input" type="text" placeholder="Task name" />
+          </div>
+          <div>
+            <label for="task-description-input">Description</label>
+            <input
+              id="task-description-input"
+              type="text"
+              placeholder="Description of task"
+            />
+          </div>
+          <div>
+            <label for="task-date-input">Due Date</label>
+            <input id="task-date-input" type="date" />
+          </div>
+          <div>
+            <label for="task-priority-select">Priority</label>
+            <select id="task-priority-select"></select>
+          </div>
+          <div>
+            <button class="new-task-cancel-btn cancel-btn">Cancel</button>
+            <button class="new-task-create-btn ok-btn">Create Task</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Edit Task lightbox-->
+    <!-- <div class="edit-task-container">
+        <div class="edit-task-lightbox">
+            <h2 class="edit-task-name">Current Task</h2>
+            <div class="task-feedback"></div>
+            <form id="task-form">
+                <div>
+                    <label for="task-name-input">Name</label>
+                    <input id="task-name-input" type="text" placeholder="Task name" /> 
+                </div>
+                <div>
+                    <label for="task-description-input">Description</label>
+                    <input id="task-description-input" type="text" placeholder="Description of task" />
+                </div>
+                <div>
+                    <label for="task-date-input">Due Date</label>
+                    <input id="task-date-input" type="date" />
+                </div>
+                <div>
+                    <label for="task-priority-select">Priority</label>
+                    <select id="task-priority-select"></select>
+                </div>
+                <div>
+                    <button class="edit-task-cancel-btn cancel-btn" >Cancel</button>
+                    <button calss="edit-task-save-btn ok-btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div> 
+    -->
+
+    <!-- Filter Tags lightbox-->
+    <div class="filter-tags-container">
+      <div class="filter-tags-lightbox">
+        <h2 class="filter-tags-title">Tags</h2>
+        <div class="filter-tags-items"></div>
+        <div>
+          <button class="filter-tags-cancel-btn cancel-btn">Cance</button>
+          <button class="filter-tags-apply-btn ok-btn">Apply Filter</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
