@@ -1,6 +1,6 @@
 import { Task } from "./task.js"
 
-function getTask(title) { // Private function
+function getTask(title) {
     return this.tasks.find(task => task.title === title);
 }
 

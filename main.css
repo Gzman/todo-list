@@ -112,6 +112,22 @@ main {
   background-color: azure;
 }
 
+.new-task-feedback {
+  display: none;
+}
+
 .filter-tags-lightbox {
   background-color: cornsilk;
+}
+
+.priority-low {
+  border: 0.3rem solid green;
+}
+
+.priority-medium {
+  border: 0.3rem solid orange;
+}
+
+.priority-high {
+  border: 0.3rem solid red;
 }
