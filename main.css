@@ -54,7 +54,7 @@ main {
   background-color: gainsboro;
 }
 
-.filter-view-and-project-view-container {
+.main-view {
   width: 100%;
   background-color: rgb(155, 201, 155);
 }
@@ -76,6 +76,7 @@ main {
 }
 
 .new-project-container,
+.edit-task-container,
 .new-task-container,
 .filter-tags-container {
   display: none;
@@ -90,6 +91,7 @@ main {
 }
 
 .new-project-lightbox,
+.edit-task-lightbox,
 .new-task-lightbox,
 .filter-tags-lightbox {
   width: max-content;
@@ -112,7 +114,11 @@ main {
   background-color: azure;
 }
 
-.new-task-feedback {
+.edit-task-lightbox {
+  background-color: deeppink;
+}
+
+.new-task-feedback, .edit-task-feedback {
   display: none;
 }
 

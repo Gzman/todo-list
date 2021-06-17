@@ -1,4 +1,4 @@
-import { viewEvents, viewMediator } from "../mediator/viewMediator.js"
+import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
 
 (function NewProjectLightbox() {
     const $form = document.querySelector("#new-project-form");
@@ -36,7 +36,7 @@ import { viewEvents, viewMediator } from "../mediator/viewMediator.js"
         const projectAlreadyExists = $projects.find((projectItem) => projectItem.dataset.title === $name.value);
         if (projectAlreadyExists) {
             errors.push({ id: $name, message: "Project already exists." });
-        }
+        }projects
         return errors;
     }
 
@@ -44,7 +44,7 @@ import { viewEvents, viewMediator } from "../mediator/viewMediator.js"
         event.preventDefault();
         const errors = validate();
         if (errors.length === 0) {
-            viewMediator.publish(viewEvents - CREATE_PROJECT, $name.value);
+            ViewMediator.publish(ViewEvents.CREATE_PROJECT, $name.value);
         } else {
             Feedback.render(errors);
         }
@@ -54,5 +54,6 @@ import { viewEvents, viewMediator } from "../mediator/viewMediator.js"
         event.preventDefault();
         const newProjectContainer = document.querySelector(".new-project-container");
         newProjectContainer.classList.remove("showItem");
+        $form.reset();
     });
 })();

@@ -1,6 +1,6 @@
 import { Task } from "./task.js"
 
-function getTask(title) {
+function findTask(title) {
     return this.tasks.find(task => task.title === title);
 }
 
@@ -10,8 +10,17 @@ class Project {
         this.tasks = [];
     }
 
+    getTask(title) {
+        const task = findTask.call(this, title); 
+        return {...task};
+    }
+
+    getTasks() {
+        return [...this.tasks];
+    }
+
     addTask({ title, description, dueDate, priority, tags }) {
-        const taskAlreadyExists = getTask.call(this, title);
+        const taskAlreadyExists = findTask.call(this, title);
         if (!taskAlreadyExists) {
             this.tasks.push(new Task(title, description, dueDate, priority, tags));
         }
@@ -22,11 +31,11 @@ class Project {
     }
 
     toggleTaskStatus(title, isComplete) {
-        getTask.call(this, title)?.isComplete = isComplete;
+        findTask.call(this, title)?.isComplete = isComplete;
     }
 
     editTask(title, { title, description, dueDate, priority, tags, isComplete }) {
-        const task = getTask.call(this, title);
+        const task = findTask.call(this, title);
         if (task) {
             if (title) task.title = title;
             if (description) task.description = description;
@@ -38,7 +47,7 @@ class Project {
     }
 
     addTag(title, tags) {
-        getTask(this, title).addTags(tags);
+        findTask.call(this, title).addTags(tags);
     }
 }
 
