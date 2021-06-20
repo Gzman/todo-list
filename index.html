@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ToDo App</title>
     <link rel="stylesheet" href="./main.css" />
+    <script defer type="module" src="./src/index.js"></script>
   </head>
   <body>
     <header>
@@ -36,54 +37,15 @@
       </div>
     </main>
 
-    <!-- Current Project View-->
-    <div class="current-project">
-      <!-- Show 2/6 (how many task are completed) -->
-      <h2 class="current-project-name">Name</h2>
-      <div class="current-project-ctrls">
-        <button class="current-project-create-btn">Create Task</button>
-        <button class="current-project-delete-btn">Delete Project</button>
-        <button class="current-project-completed-btn filter-btn">
-          Completed Tasks
-        </button>
-        <select class="current-project-sort"></select>
-      </div>
-      <div class="current-project-task-items">
-        <!-- 
-                <div class="task-item " data-project="" data-task="">
-                    <input type="checkbox" class="task-item-complete">
-                    <p class="task-item-name"></p>
-                    <div class="task-ctrls">
-                        <button class="task-item-edit">Edit Task</button>
-                        <button class="task-item-delete">Delete Task</button>
-                    </div>
-                    <p class="task-item-date"></p>
-                </div>
-            -->
-      </div>
-    </div>
-
-    <!-- Current Filter View -->
-    <div class="current-filter">
-      <h2 class="current-filter-name">Current Filter</h2>
-      <div class="current-filter-project-items">
-        <!-- 
-                <div class="project-item">
-                    <h2 class="project-item-name"></h2> -> make clickable -> switch to current-project
-                    <task-item ... same as in current-project>
-                </div>
-            -->
-      </div>
-    </div>
-
     <!-- New Project lightbox-->
     <div class="new-project-container">
       <div class="new-project-lightbox">
         <h2 class="new-project-title">New Project</h2>
-        <form id="project-form">
+        <div class="new-project-feedback"></div>
+        <form id="new-project-form">
           <div>
-            <label for="project-name-input">Name</label>
-            <input id="project-name-input" type="text" />
+            <label for="new-project-name">Name</label>
+            <input id="new-project-name" type="text" />
           </div>
           <div>
             <button class="new-project-cancel-btn cancel-btn">Cancel</button>
@@ -161,7 +123,7 @@
                 </div>
                 <div>
                     <button class="edit-task-cancel-btn cancel-btn" >Cancel</button>
-                    <button calss="edit-task-save-btn ok-btn">Save</button>
+                    <button class="edit-task-save-btn ok-btn">Save</button>
                 </div>
             </form>
         </div>

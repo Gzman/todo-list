@@ -2,13 +2,13 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
 
 (function EditTaskLightbox() {
     const $form = document.querySelector("#edit-task-form");
-    const $name = $from.querySelector("#edit-task-name");
+    const $name = $form.querySelector("#edit-task-name");
     const $description = $form.querySelector("#edit-task-description");
     const $dueDate = $form.querySelector("#edit-task-date");
     const $priority = $form.querySelector("#edit-task-priority");
     const $taskItems = document.querySelector(".current-project-task-items").children;
     const currentProject = document.querySelector(".current-project-name").textContent;
-    const taskToEdit;
+    const taskToEdit = "";
 
     ViewMediator.subscribe(ViewEvents.GET_TASK, ({ title, description, dueDate, priority }) => {
         taskToEdit = title;

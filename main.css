@@ -56,7 +56,7 @@ main {
 
 .main-view {
   width: 100%;
-  background-color: rgb(155, 201, 155);
+  background-color: rgb(155, 188, 155);
 }
 
 .current-project,
@@ -73,6 +73,15 @@ main {
 
 .current-filter {
   background-color: lightcyan;
+}
+
+.project-item {
+  cursor: pointer;
+}
+
+.task-item, .task-item-controlls {
+  display: flex;
+  gap: 0.5rem;
 }
 
 .new-project-container,

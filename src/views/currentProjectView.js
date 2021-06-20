@@ -6,17 +6,16 @@ import { createTaskItem } from "./createTaskItem.js"
 
     ViewMediator.subscribe(ViewEvents.RENDER_PROJECT, (projectTitle, tasks) => {
         $content.textContent = "";
+        console.log(tasks);
         const $ProjectView = createProjectView(projectTitle, tasks);
         $content.append($ProjectView);
     });
-
+    
 })();
 
 function createProjectView(projectTitle, tasks) {
-    const $taskItems = createTaskItems(projectTitle, tasks);
     const $currentProject = document.createElement("div");
-    
-    $currentProject.insertAdjacentHTML("beforeend", `
+    $currentProject.innerHTML = `
     <h2 class="current-project-name">${projectTitle}</h2>
     <div class="current-project-ctrls">
       <button class="current-project-create-btn">Create Task</button>
@@ -27,10 +26,11 @@ function createProjectView(projectTitle, tasks) {
       <select class="current-project-sort"></select>
     </div>
     <div class="current-project-task-items">
-    </div>`);
-    $currentProject.querySelector("current-project-task-items").append($taskItems);
-    
-    createSortSelect($taskItems);
+    </div>`;
+    const $taskItems = $currentProject.querySelector(".current-project-task-items");
+    createTaskItems(projectTitle, tasks)?.forEach((item) => $taskItems.append(item));
+
+    SortSelect();
 
     ViewMediator.subscribe(ViewEvents.CREATED_TASK, (projectTitle, { title, description, priority, dueDate, tags, isComplete }) => {
         const $task = createTaskItem(projectTitle, { title, description, priority, dueDate });
@@ -38,7 +38,7 @@ function createProjectView(projectTitle, tasks) {
     });
 
     ViewMediator.subscribe(ViewEvents.EDIT_TASK, (projectTitle, { title, description, dueDate, isComplete }) => {
-        const $task = $taskItems.find((item) => item.dataset.task === title);
+        const $task = [...$taskItems.children].find((item) => item.dataset.task === title);
         if (!$task) {
             return;
         }
@@ -67,7 +67,7 @@ function createProjectView(projectTitle, tasks) {
     });
 
     ViewMediator.subscribe(ViewEvents.REMOVE_TASK, (projectTitle, title) => {
-        const $task = $taskItems.find((task) => task.dataset.task === title);
+        const $task = [...$taskItems.children].find((task) => task.dataset.task === title);
         $taskItems.removeChild($task);
     });
 
@@ -75,17 +75,17 @@ function createProjectView(projectTitle, tasks) {
 }
 
 function createTaskItems(projectTitle, tasks) {
-    return tasks.map((task) => createTaskItem(projectTitle, task));
+    return tasks?.map((task) => createTaskItem(projectTitle, task));
 }
 
-function createSortSelect($taskItems) {
-    const $select = $currentProject.querySelector(".current-project-sort");
+function SortSelect() {
+    const $taskItems = document.querySelector(".current-project-task-items");
+    const $select = document.querySelector(".current-project-sort");
     const options = [
         { value: 1, text: "Title" },
         { value: 2, text: "Due Date" }
     ];
 
-    $select.classList.add("current-project-sort");
     options.forEach((option) => {
         const $option = document.createElement("option");
         $option.value = option.value;
@@ -96,18 +96,22 @@ function createSortSelect($taskItems) {
     $select.addEventListener("change", (event) => {
         const selected = event.currentTarget.value;
         if (selected === "1") {
-            $taskItems.sort((a, b) => {
-                const atitle = a.dataset.task;
-                const bTitle = b.dataset.task;
-                return atitle.localeCompare(bTitle);
-            });
+            [...$taskItems.children]
+                .sort((a, b) => {
+                    const atitle = a.dataset.task;
+                    const bTitle = b.dataset.task;
+                    return atitle.localeCompare(bTitle);
+                })
+                .forEach((item) => $taskItems.appendChild(item));
         }
         else if (selected === "2") {
-            $taskItems.sort((a, b) => {
-                const aDate = new Date(a.querySelector("task-item-date").value);
-                const bDate = new Date(b.querySelector(".task-item-date").value);
-                return aDate - bDate;
-            });
+            [...$taskItems.children]
+                .sort((a, b) => {
+                    const aDate = new Date(a.querySelector("task-item-date").value);
+                    const bDate = new Date(b.querySelector(".task-item-date").value);
+                    return aDate - bDate;
+                })
+                .forEach((item) => $taskItems.appendChild(item));
         }
     });
 }

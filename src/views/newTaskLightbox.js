@@ -2,7 +2,7 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
 
 (function NewTaskLightbox() {
     const $form = document.querySelector("#task-form");
-    const $name = $from.querySelector("#task-name");
+    const $name = $form.querySelector("#task-name");
     const $description = $form.querySelector("#task-description");
     const $dueDate = $form.querySelector("#task-date");
     const $priority = $form.querySelector("#task-priority");

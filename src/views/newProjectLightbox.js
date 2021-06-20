@@ -2,7 +2,7 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
 
 (function NewProjectLightbox() {
     const $form = document.querySelector("#new-project-form");
-    const $name = $form.querySelector("#new-project-name");
+    const $name = $form.querySelector("#project-name-input");
     const $createBtn = $form.querySelector(".new-project-create-btn");
     const $cancelBtn = $form.querySelector(".new-project-cancel-btn");
     const $projects = document.querySelector(".projects-items").children;

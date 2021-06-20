@@ -11,18 +11,18 @@ class Project {
     }
 
     getTask(title) {
-        const task = findTask.call(this, title); 
-        return {...task};
+        const task = findTask.call(this, title);
+        return { ...task };
     }
 
     getTasks() {
         return [...this.tasks];
     }
 
-    addTask({ title, description, dueDate, priority, tags }) {
+    addTask(title, description, dueDate, priority) {
         const taskAlreadyExists = findTask.call(this, title);
         if (!taskAlreadyExists) {
-            this.tasks.push(new Task(title, description, dueDate, priority, tags));
+            this.tasks.push(new Task(title, description, dueDate, priority));
         }
     }
 
@@ -31,18 +31,18 @@ class Project {
     }
 
     toggleTaskStatus(title, isComplete) {
-        findTask.call(this, title)?.isComplete = isComplete;
+        const task = findTask.call(this, title);
+        if (task) task.isComplete = isComplete;
     }
 
-    editTask(title, { title, description, dueDate, priority, tags, isComplete }) {
+    editTask(title, description, dueDate, priority, isComplete) {
         const task = findTask.call(this, title);
         if (task) {
             if (title) task.title = title;
             if (description) task.description = description;
             if (dueDate) task.dueDate = dueDate;
             if (priority) task.priority = priority;
-            if (tags) task.tags = new Set(tags);
-            if (isComplete) task.isComplete = isComplete;
+            task.isComplete = isComplete;
         }
     }
 

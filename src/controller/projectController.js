@@ -1,5 +1,5 @@
 import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
-import { Project } from "../buisness-logic/project"
+import { Project } from "../buisness-logic/project.js"
 
 const ProjectController = (() => {
     const projects = [new Project("Inbox")];
@@ -11,8 +11,10 @@ const ProjectController = (() => {
     ViewMediator.subscribe(ViewEvents.PROJECT_SELECTED, (title) => {
         const project = getProject(title);
         if (project) {
+            console.log(project);
             const tasks = project.getTasks();
-            ViewMediator.publish(ViewEvents.RENDER_PROJECT, projectTitle, tasks);
+            console.log(tasks);
+            ViewMediator.publish(ViewEvents.RENDER_PROJECT, title, tasks);
         }
     });
 
@@ -87,5 +89,3 @@ const ProjectController = (() => {
     });
 
 })();
-
-export { ProjectController }
