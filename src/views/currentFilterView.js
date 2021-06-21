@@ -1,24 +1,38 @@
 import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
-import { createTaskItem } from "./createTaskItem.js"
+import { createProjectItem } from "./createProjectItem.js"
+import { createTaskItems } from "./createTaskItem.js"
 
 (function CurrentFilterView() {
     const $content = document.querySelector(".main-view-content");
 
-    const renderFilteredTasks = (filtered) => {
-        $content.textContent = "";
-        filtered.forEach(p => {
-            const $project = document.createElement("p");
-            $project.textContent = p.project;
-            $project.addEventListener("click", (event) => {
-                const $project = event.currentTarget;
-                ViewMediator.publish(ViewEvents.PROJECT_SELECTED, $project.textContent);
-            });
-            const $taskItems = p.tasks.map((task) => createTaskItem(p.project, task));
-            const $div = document.createElement("div");
-            $div.append($project, $taskItems);
-            $content.append($div);
+    const createFilterItems = (filteredProjects) => {
+        const $filterItems = document.createElement("div");
+        $filterItems.classList.add("current-filter-items");
+        filteredProjects.forEach((item) => {
+            const $project = createProjectItem(item.project);
+            const $taskItems = createTaskItems(item.project, item.tasks);
+            const $filterItem = document.createElement("div");
+            $filterItem.classList.add("filter-item");
+            $filterItem.append($project, ...$taskItems);
+            $filterItems.append($filterItem);
         });
+        return $filterItems;
     }
 
-    ViewMediator.subscribe(ViewEvents.GET_FILTERED_TASKS, (filtered) => renderFilteredTasks(filtered));
+    const createFilterView = (filter, filtered) => {
+        if (filtered.length < 1) return;
+        const $filterView = document.createElement("div");
+        $filterView.classList.add("current-filter");
+
+        const $filterName = document.createElement("p");
+        $filterName.textContent = filter;
+
+        const $filterItems = createFilterItems(filtered);
+        $filterView.append($filterName, $filterItems);
+
+        $content.textContent = "";
+        $content.append($filterView);
+    }
+
+    ViewMediator.subscribe(ViewEvents.GET_FILTERED_TASKS, ({ filter, filtered }) => createFilterView(filter, filtered));
 })();
