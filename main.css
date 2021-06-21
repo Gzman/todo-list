@@ -75,8 +75,19 @@ main {
   background-color: lightcyan;
 }
 
+.current-filter-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .project-item {
   cursor: pointer;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
 }
 
 .task-item, .task-item-controlls {
@@ -113,6 +124,10 @@ main {
 
 .showItem {
   display: block;
+}
+
+.hideItem {
+  display: none;
 }
 
 .new-project-lightbox {
