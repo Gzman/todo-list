@@ -1,4 +1,4 @@
-import {ViewEvents, ViewMediator} from "../mediator/viewMediator.js"
+import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
 
 (function HeadBar() {
     const $filter = document.querySelector("#global-filter-text");

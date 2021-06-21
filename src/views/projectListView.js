@@ -1,4 +1,5 @@
 import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
+import { createProjectItem } from "./createProjectItem.js"
 
 (function ProjectFilter() {
     const $inboxBtn = document.querySelector(".projects-inbox-btn");
@@ -16,21 +17,25 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
 (function ProjectsUserCreated() {
     const $projectItems = document.querySelector(".projects-items");
     const $projectAddBtn = document.querySelector(".projects-add-btn");
-    const $newProjectLightbox = document.querySelector(".new-project-lightbox");
-    let projects = new Set();
+    const $newProjectLightbox = document.querySelector(".new-project-container");
 
     ViewMediator.subscribe(ViewEvents.CREATE_PROJECT, (title) => {
-        projects.add(title);
+        const $project = createProjectItem(title);
+        $projectItems.append($project);
     });
 
     ViewMediator.subscribe(ViewEvents.REMOVE_PROJECT, (title) => {
-        projects.remove(title);
+        if ($projectItems.hasChildNodes()) {
+            [...$projectItems.children]
+                .find((item) => item.querySelector(".project-item-name").textContent === title)
+                .remove();
+        }
     });
 
     $projectItems.addEventListener("click", (event) => {
-        const project = event.target.closest(".project-item");
-        if (!project) {
-            const title = project.data.title;
+        const $project = event.target.closest(".project-item");
+        if (!$project) {
+            const title = $project.querySelector(".project-item-name").textContent;
             ViewMediator.publish(ViewEvents.PROJECT_SELECTED, title);
         }
     });
@@ -38,4 +43,5 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
     $projectAddBtn.addEventListener("click", (event) => {
         $newProjectLightbox.classList.add("showItem");
     });
+
 })();
