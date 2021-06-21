@@ -1,5 +1,6 @@
 import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
 import { Project } from "../buisness-logic/project.js"
+import { getWeek } from "date-fns"
 
 const ProjectController = (() => {
     let projects = [new Project("Inbox")];
@@ -29,7 +30,6 @@ const ProjectController = (() => {
 
     ViewMediator.subscribe(ViewEvents.CREATE_TASK, ({ projectTitle, title, description, dueDate, priority }) => {
         getProject(projectTitle)?.addTask(title, description, dueDate, priority);
-        console.log("Controller ", getProject(projectTitle));
     });
 
     ViewMediator.subscribe(ViewEvents.REMOVE_TASK, (projectTitle, title) => {
@@ -50,21 +50,22 @@ const ProjectController = (() => {
     const filterTasks = (filter) => {
         return projects.reduce((filtered, project) => {
             const tasks = project.getTasks().filter(filter);
-            if (tasks && tasks.length >= 1) {
+            if (tasks?.length >= 1) {
                 filtered.push({ project: project.title, tasks });
             }
             return filtered;
         }, []);
     }
 
-    ViewMediator.subscribe(ViewEvents.FILTER_TASK_BY_DATE, (date) => {
-        const tasksOfDate = filterTasks((task) => task.dueDate === date);
+    ViewMediator.subscribe(ViewEvents.FILTER_TASK_TODAY, (date) => {
+        const today = new Date();
+        const tasksOfDate = filterTasks((task) => task.dueDate?.getDate() === today.getDate());
         ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: date, filtered: tasksOfDate });
     });
 
     ViewMediator.subscribe(ViewEvents.FILTER_TASK_BY_TEXT, (text) => {
         if (text === "") return;
-        const taskFilteredByText = filterTasks((task) => task.title.includes(text) || task.description.includes(text) || task.priority.includes(text));
+        const taskFilteredByText = filterTasks((task) => task.title.includes(text) || task.priority.includes(text));
         ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: text, filtered: taskFilteredByText });
     });
 
@@ -74,18 +75,14 @@ const ProjectController = (() => {
     });
 
     ViewMediator.subscribe(ViewEvents.FILTER_BY_WEEK, (week) => {
-        const today = new Date();
-        // Calculate current week!
-        const tasksOfThisWeek = filterTasks((task) => {
-            task.dueDate.getFullYear() === today.getFullYear()
-                && task.dueDate.getMonth() === today.getMonth()
-                && task.dueDate.getDate() - today.getDate();
-        });
+        const currentWeek = getWeek(new Date());
+        const tasksOfThisWeek = filterTasks((task) => getWeek(task.dueDate) === currentWeek);
+        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: week, filtered: tasksOfThisWeek });
     });
 
     ViewMediator.subscribe(ViewEvents.FILTER_BY_MONTH, (month) => {
         const today = new Date();
-        const tasksOfThisMonth = filterTasks((task) => task.dueDate.getFullYear() === today.getFullYear() && task.dueDate.getMonth() === today.getMonth());
+        const tasksOfThisMonth = filterTasks((task) => task.dueDate?.getFullYear() === today.getFullYear() && task.dueDate?.getMonth() === today.getMonth());
         ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: month, filtered: tasksOfThisMonth });
     });
 

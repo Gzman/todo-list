@@ -35,7 +35,7 @@ class Project {
         if (task) task.isComplete = isComplete;
     }
 
-    editTask(title, description, dueDate, priority, isComplete) {
+    editTask(title, description, dueDate, priority, isComplete = false) {
         const task = findTask.call(this, title);
         if (task) {
             if (title) task.title = title;

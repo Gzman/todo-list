@@ -7,16 +7,14 @@ import { format } from "date-fns";
     const $description = $form.querySelector("#edit-task-description-input");
     const $dueDate = $form.querySelector("#edit-task-date-input");
     const $priority = $form.querySelector("#edit-task-priority-select");
-    let taskToEdit = "";
-    let taskComplete = false;
+    let selectedTask = "";
 
     ViewMediator.subscribe(ViewEvents.GET_TASK, ({ title, description, dueDate, priority, isComplete }) => {
-        taskToEdit = title;
+        selectedTask = title;
         $name.value = title;
         $description.value = description;
-        $dueDate.value = format(dueDate, "yyyy-MM-dd");
+        if (dueDate) $dueDate.value = format(dueDate, "yyyy-MM-dd");
         $priority.value = priority;
-        taskComplete = isComplete;
     });
 
     const Feedback = (() => {
@@ -47,7 +45,7 @@ import { format } from "date-fns";
 
         const $taskItems = document.querySelector(".current-project-task-items");
         const taskAlreadyExists = [...$taskItems.children]?.find((item) => item.dataset.task === $name.value);
-        if ($name.value !== taskToEdit && taskAlreadyExists) {
+        if ($name.value !== selectedTask && taskAlreadyExists) {
             errors.push({ id: $name, message: "Task already exists." });
         }
 
@@ -55,8 +53,9 @@ import { format } from "date-fns";
             errors.push({ id: $description, message: "Please fll out a desscription" });
         }
 
-        const now = new Date();
-        if (new Date($dueDate.value) < now) {
+        const now = new Date("YYYY-MM-DD");
+        const dueDate = new Date($dueDate.value);
+        if (dueDate < now) {
             errors.push({ id: $dueDate, message: "Date can't be in the past." });
         }
         return errors;
@@ -80,9 +79,8 @@ import { format } from "date-fns";
                 project,
                 title: $name.value,
                 description: $description.value,
-                dueDate: new Date($dueDate.value),
+                dueDate: ($dueDate.value) ? new Date($dueDate.value) : null,
                 priority: $priority.value,
-                isComplete: taskComplete
             });
             $form.reset();
             Feedback.reset();

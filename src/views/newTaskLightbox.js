@@ -43,11 +43,12 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
         }
 
         if ($description.value.length < 1) {
-            errors.push({ id: $description, message: "Please fll out a desscription" });
+            errors.push({ id: $description, message: "Please fill out a desscription" });
         }
         
-        const now = new Date();
-        if (new Date($dueDate.value) < now) {
+        const now = new Date("YYYY-MM-DD");
+        const dueDate = new Date($dueDate.value);
+        if (dueDate < now) {
             errors.push({ id: $dueDate, message: "Date can't be in the past." });
         }
         return errors;
@@ -69,7 +70,7 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
                 projectTitle,
                 title: $name.value,
                 description: $description.value,
-                dueDate: new Date($dueDate.value),
+                dueDate: ($dueDate.value) ? new Date($dueDate.value) : null,
                 priority: $priority.value
             });
             $form.reset();

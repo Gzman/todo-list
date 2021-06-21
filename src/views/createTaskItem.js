@@ -50,7 +50,7 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
   const $dueDate = document.createElement("input");
   $dueDate.classList.add("task-item-date");
   $dueDate.type = "date";
-  $dueDate.value = format(dueDate, "yyyy-MM-dd");
+  if (dueDate) $dueDate.value = format(dueDate, "yyyy-MM-dd");
   $dueDate.readOnly = true;
 
   $taskItem.append($isComplete, $name, $controlls, $dueDate);

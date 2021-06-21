@@ -1,5 +1,6 @@
 import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
 import { createProjectItem } from "./createProjectItem.js"
+import { format } from "date-fns"
 
 (function ProjectFilter() {
     const $inboxBtn = document.querySelector(".projects-inbox-btn");
@@ -8,9 +9,9 @@ import { createProjectItem } from "./createProjectItem.js"
     const $monthBtn = document.querySelector(".projects-month-btn");
 
     $inboxBtn.addEventListener("click", (event) => ViewMediator.publish(ViewEvents.PROJECT_SELECTED, $inboxBtn.textContent));
-    $todayBtn.addEventListener("click", (event) => ViewMediator.publish(ViewEvents.FILTER_TASK_BY_DATE, new Date()));
-    $weekBtn.addEventListener("click", (event) => ViewMediator.publish(ViewEvents.FILTER_BY_WEEK, new Date()));
-    $monthBtn.addEventListener("click", (event) => ViewMediator.publish(ViewEvents.FILTER_BY_MONTH, new Date()));
+    $todayBtn.addEventListener("click", (event) => ViewMediator.publish(ViewEvents.FILTER_TASK_TODAY, format(new Date(), "EEEE")));
+    $weekBtn.addEventListener("click", (event) => ViewMediator.publish(ViewEvents.FILTER_BY_WEEK, `${format(new Date(), "wo")} Week`));
+    $monthBtn.addEventListener("click", (event) => ViewMediator.publish(ViewEvents.FILTER_BY_MONTH, format(new Date(), "LLLL")));
 
 })();
 
