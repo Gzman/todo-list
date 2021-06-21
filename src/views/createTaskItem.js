@@ -1,4 +1,5 @@
 import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js";
+import { format } from "date-fns";
 
 function createTaskItem(projectTitle, { title, description, priority, dueDate, isComplete }) {
   const $taskItem = document.createElement("div");
@@ -49,7 +50,7 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
   const $dueDate = document.createElement("input");
   $dueDate.classList.add("task-item-date");
   $dueDate.type = "date";
-  $dueDate.value = formateDate(dueDate);
+  $dueDate.value = format(dueDate, "yyyy-MM-dd");
   $dueDate.readOnly = true;
 
   $taskItem.append($isComplete, $name, $controlls, $dueDate);
@@ -58,11 +59,6 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
 
 function createTaskItems(projectTitle, tasks) {
   return tasks?.map((task) => createTaskItem(projectTitle, task));
-}
-
-function formateDate(date) {
-  const formatted = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-  return formatted;
 }
 
 /*function createExtendView(description) {

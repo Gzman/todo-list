@@ -1,4 +1,5 @@
 import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
+import { format } from "date-fns";
 
 (function EditTaskLightbox() {
     const $form = document.querySelector("#edit-task-form");
@@ -13,7 +14,7 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
         taskToEdit = title;
         $name.value = title;
         $description.value = description;
-        $dueDate.value = dueDate; // date needs to be formatted to the following string: YYYY-MM-DD
+        $dueDate.value = format(dueDate, "yyyy-MM-dd");
         $priority.value = priority;
         taskComplete = isComplete;
     });
