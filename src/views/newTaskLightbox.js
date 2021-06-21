@@ -2,16 +2,14 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
 
 (function NewTaskLightbox() {
     const $form = document.querySelector("#task-form");
-    const $name = $form.querySelector("#task-name");
-    const $description = $form.querySelector("#task-description");
-    const $dueDate = $form.querySelector("#task-date");
-    const $priority = $form.querySelector("#task-priority");
+    const $name = $form.querySelector("#task-name-input");
+    const $description = $form.querySelector("#task-description-input");
+    const $dueDate = $form.querySelector("#task-date-input");
+    const $priority = $form.querySelector("#task-priority-select");
     const $cancelBtn = $form.querySelector(".new-task-cancel-btn");
     const $createBtn = $form.querySelector(".new-task-create-btn");
-    const $taskItems = document.querySelector(".current-project-task-items").children;
-    const currentProject = document.querySelector(".current-project-name").textContent;
 
-    const Feedback = () => {
+    const Feedback = (() => {
         const $feedback = document.querySelector(".task-feedback");
 
         const reset = () => {
@@ -29,21 +27,25 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
             $feedback.classList.add("showItem");
         }
 
-        return { render }
-    }
+        return { render, reset }
+    })();
 
     const validate = () => {
         const errors = [];
         if ($name.value.length < 1) {
             errors.push({ id: $name, message: "Name must be set." });
         }
-        const taskAlreadyExists = $taskItems.find((item) => item.dataset.task === $name.value); 
+
+        const $taskItems = document.querySelector(".current-project-task-items");
+        const taskAlreadyExists = [...$taskItems.children]?.find((item) => item.dataset.task === $name.value);
         if (taskAlreadyExists) {
             errors.push({ id: $name, message: "Task already exists." });
         }
+
         if ($description.value.length < 1) {
             errors.push({ id: $description, message: "Please fll out a desscription" });
         }
+        
         const now = new Date();
         if (new Date($dueDate.value) < now) {
             errors.push({ id: $dueDate, message: "Date can't be in the past." });
@@ -54,29 +56,27 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
     $cancelBtn.addEventListener("click", (event) => {
         event.preventDefault();
         $form.reset();
-        const $newTaskContainer = document.querySelector(".new-task-container");
-        $newTaskContainer.classList.remove("showItem");
+        Feedback.reset();
+        document.querySelector(".new-task-container").classList.remove("showItem");
     });
-
-    const createNewTask = () => {
-        return {
-            title: $name.value,
-            description: $description.value,
-            dueDate: $dueDate.value,
-            priority: $priority.text,
-            isComplete: false
-        }
-    }
 
     $createBtn.addEventListener("click", (event) => {
         event.preventDefault();
         const errors = validate();
         if (errors.length === 0) {
-            const task = createNewTask();
-            ViewMediator.publish(ViewEvents.CREATE_TASK, currentProject, task);
+            const projectTitle = document.querySelector(".current-project-name")?.textContent;
+            ViewMediator.publish(ViewEvents.CREATE_TASK, {
+                projectTitle,
+                title: $name.value,
+                description: $description.value,
+                dueDate: new Date($dueDate.value),
+                priority: $priority.value
+            });
             $form.reset();
+            Feedback.reset();
         } else {
             Feedback.render(errors);
         }
     });
+
 })();

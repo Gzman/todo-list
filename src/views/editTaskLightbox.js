@@ -2,25 +2,24 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
 
 (function EditTaskLightbox() {
     const $form = document.querySelector("#edit-task-form");
-    const $name = $form.querySelector("#edit-task-name");
-    const $description = $form.querySelector("#edit-task-description");
-    const $dueDate = $form.querySelector("#edit-task-date");
-    const $priority = $form.querySelector("#edit-task-priority");
-    const $taskItems = document.querySelector(".current-project-task-items").children;
-    const currentProject = document.querySelector(".current-project-name").textContent;
-    const taskToEdit = "";
+    const $name = $form.querySelector("#edit-task-name-input");
+    const $description = $form.querySelector("#edit-task-description-input");
+    const $dueDate = $form.querySelector("#edit-task-date-input");
+    const $priority = $form.querySelector("#edit-task-priority-select");
+    let taskToEdit = "";
+    let taskComplete = false;
 
-    ViewMediator.subscribe(ViewEvents.GET_TASK, ({ title, description, dueDate, priority }) => {
+    ViewMediator.subscribe(ViewEvents.GET_TASK, ({ title, description, dueDate, priority, isComplete }) => {
         taskToEdit = title;
         $name.value = title;
         $description.value = description;
-        $dueDate.value = dueDate;
+        $dueDate.value = dueDate; // date needs to be formatted to the following string: YYYY-MM-DD
         $priority.value = priority;
+        taskComplete = isComplete;
     });
 
-    const Feedback = () => {
+    const Feedback = (() => {
         const $feedback = document.querySelector(".edit-task-feedback");
-
         const reset = () => {
             $feedback.classList.remove("showItem");
             $feedback.textContent = "";
@@ -36,21 +35,25 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
             $feedback.classList.add("showItem");
         }
 
-        return { render }
-    }
+        return { render, reset }
+    })();
 
     const validate = () => {
         const errors = [];
         if ($name.value.length < 1) {
             errors.push({ id: $name, message: "Name must be set." });
         }
-        const taskAlreadyExists = $taskItems.find((item) => item.dataset.task === $name.value);
+
+        const $taskItems = document.querySelector(".current-project-task-items");
+        const taskAlreadyExists = [...$taskItems.children]?.find((item) => item.dataset.task === $name.value);
         if ($name.value !== taskToEdit && taskAlreadyExists) {
             errors.push({ id: $name, message: "Task already exists." });
         }
+
         if ($description.value.length < 1) {
             errors.push({ id: $description, message: "Please fll out a desscription" });
         }
+
         const now = new Date();
         if (new Date($dueDate.value) < now) {
             errors.push({ id: $dueDate, message: "Date can't be in the past." });
@@ -62,8 +65,8 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
     $cancelBtn.addEventListener("click", (event) => {
         event.preventDefault();
         $form.reset();
-        const $editTaskContainer = document.querySelector(".edit-task-container");
-        $editTaskContainer.classList.remove("showItem");
+        Feedback.reset();
+        document.querySelector(".edit-task-container").classList.remove("showItem");
     });
 
     const $saveBtn = $form.querySelector(".edit-task-save-btn");
@@ -71,15 +74,17 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
         event.preventDefault();
         const errors = validate();
         if (errors.length === 0) {
-            const task = {
+            const project = document.querySelector(".current-project-name")?.textContent;
+            ViewMediator.publish(ViewEvents.EDIT_TASK, {
+                project,
                 title: $name.value,
                 description: $description.value,
-                dueDate: $dueDate.value,
-                priority: $priority.text,
-                isComplete: false
-            }
-            ViewMediator.publish(ViewEvents.EDIT_TASK, currentProject, task);
+                dueDate: new Date($dueDate.value),
+                priority: $priority.value,
+                isComplete: taskComplete
+            });
             $form.reset();
+            Feedback.reset();
         } else {
             Feedback.render(errors);
         }
