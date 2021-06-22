@@ -12,8 +12,9 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
   $isComplete.classList.add("task-item-complete");
   $isComplete.checked = isComplete;
   $isComplete.addEventListener("change", (event) => ViewMediator.publish(ViewEvents.EDIT_TASK, {
-    projectTitle,
-    title,
+    projectTitle: $taskItem.dataset.project,
+    taskToEdit: $taskItem.dataset.task,
+    title: $taskItem.dataset.task,
     description,
     priority,
     dueDate,
@@ -31,7 +32,7 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
   $removeBtn.classList.add("task-item-delete");
   $removeBtn.textContent = "Delete";
   $removeBtn.addEventListener("click", () => {
-    ViewMediator.publish(ViewEvents.REMOVE_TASK, projectTitle, title);
+    ViewMediator.publish(ViewEvents.REMOVE_TASK, { projectTitle: $taskItem.dataset.project, title: $taskItem.dataset.task });
     $taskItem.remove();
   });
 
@@ -40,7 +41,7 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
   $editBtn.textContent = "Edit";
   $editBtn.addEventListener("click", () => {
     document.querySelector(".edit-task-container").classList.add("showItem");
-    ViewMediator.publish(ViewEvents.EDIT_TASK_CLICKED, { projectTitle, title });
+    ViewMediator.publish(ViewEvents.EDIT_TASK_CLICKED, { projectTitle: $taskItem.dataset.project, title: $taskItem.dataset.task });
   });
 
   $controlls.append($editBtn, $removeBtn);
@@ -54,6 +55,25 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
   $dueDate.readOnly = true;
 
   $taskItem.append($isComplete, $name, $controlls, $dueDate);
+
+  ViewMediator.subscribe(ViewEvents.EDIT_TASK, ({ title, dueDate, priority, isComplete }) => {
+    if (title) {
+      $taskItem.dataset.task = title;
+      $name.textContent = title;
+    }
+    if (priority) {
+      const priorities = ["low", "medium", "high"];
+      priorities.forEach((priority) => $taskItem.classList.remove(`priority-${priority.toLowerCase()}`));
+      $taskItem.classList.add(`priority-${priority.toLowerCase()}`);
+    }
+    if (dueDate) {
+      $dueDate.value = format(dueDate, "yyyy-MM-dd");
+    }
+    if (isComplete) {
+      $isComplete.checked = isComplete;
+    }
+  });
+
   return $taskItem;
 }
 

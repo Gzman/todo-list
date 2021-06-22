@@ -47,31 +47,6 @@ function createProjectView(projectTitle, tasks) {
         $taskItems.append($task);
     });
 
-    ViewMediator.subscribe(ViewEvents.EDIT_TASK, ({ projectTitle, title, description, dueDate, priority, isComplete }) => {
-        const $task = [...$taskItems.children]?.find((item) => item.dataset.task === title);
-        if (!$task) {
-            return;
-        }
-        if (title) {
-            $task.dataset.task = title;
-            $task.querySelector(".task-item-name").textContent = title;
-        }
-        if (description) {
-            //$task.querySelector(".task-item-description").value = description;
-        }
-        if (priority) {
-            const priorities = ["low", "medium", "high"];
-            priorities.forEach((priority) => $task.classList.remove(`priority-${priority}`));
-            $task.classList.add(`priority-${priority.toLowerCase()}`);
-        }
-        if (dueDate) {
-            $task.querySelector(".task-item-date").value = dueDate;
-        }
-        if (isComplete) {
-            $task.querySelector(".task-item-complete").checked = isComplete;
-        }
-    });
-
     return $projectView;
 }
 
