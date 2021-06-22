@@ -61,14 +61,12 @@ import { format } from "date-fns";
         return errors;
     }
 
-    const $cancelBtn = $form.querySelector(".edit-task-cancel-btn");
-    $cancelBtn.addEventListener("click", (event) => {
-        event.preventDefault();
+    const close = () => {
         $form.reset();
         Feedback.reset();
         document.querySelector(".edit-task-container").classList.remove("showItem");
-    });
-
+    }
+    
     const $saveBtn = $form.querySelector(".edit-task-save-btn");
     $saveBtn.addEventListener("click", (event) => {
         event.preventDefault();
@@ -82,10 +80,16 @@ import { format } from "date-fns";
                 dueDate: ($dueDate.value) ? new Date($dueDate.value) : null,
                 priority: $priority.value,
             });
-            $form.reset();
-            Feedback.reset();
+            close();
         } else {
             Feedback.render(errors);
         }
     });
+
+    const $cancelBtn = $form.querySelector(".edit-task-cancel-btn");
+    $cancelBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        close();
+    });
+
 })();

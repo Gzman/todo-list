@@ -54,12 +54,11 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
         return errors;
     }
 
-    $cancelBtn.addEventListener("click", (event) => {
-        event.preventDefault();
+    const close = () => {
         $form.reset();
         Feedback.reset();
         document.querySelector(".new-task-container").classList.remove("showItem");
-    });
+    }
 
     $createBtn.addEventListener("click", (event) => {
         event.preventDefault();
@@ -73,11 +72,15 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
                 dueDate: ($dueDate.value) ? new Date($dueDate.value) : null,
                 priority: $priority.value
             });
-            $form.reset();
-            Feedback.reset();
+            close();
         } else {
             Feedback.render(errors);
         }
+    });
+
+    $cancelBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        close();
     });
 
 })();

@@ -40,13 +40,18 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
         return errors;
     }
 
+    const close = () => {
+        $form.reset();
+        Feedback.reset();
+        document.querySelector(".new-project-container").classList.remove("showItem");
+    }
+
     $createBtn.addEventListener("click", (event) => {
         event.preventDefault();
         const errors = validate();
         if (errors.length === 0) {
             ViewMediator.publish(ViewEvents.CREATE_PROJECT, $name.value);
-            $form.reset();
-            Feedback.reset();
+            close();
         } else {
             Feedback.render(errors);
         }
@@ -54,8 +59,6 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
 
     $cancelBtn.addEventListener("click", (event) => {
         event.preventDefault();
-        document.querySelector(".new-project-container").classList.remove("showItem");
-        $form.reset();
-        Feedback.reset();
+        close();
     });
 })();
