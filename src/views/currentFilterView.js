@@ -20,7 +20,6 @@ import { createTaskItems } from "./createTaskItem.js"
     }
 
     const createFilterView = (filter, filtered) => {
-        if (filtered.length < 1) return;
         const $filterView = document.createElement("div");
         $filterView.classList.add("current-filter");
 
@@ -28,7 +27,14 @@ import { createTaskItems } from "./createTaskItem.js"
         $filterName.textContent = filter;
 
         const $filterItems = createFilterItems(filtered);
-        $filterView.append($filterName, $filterItems);
+
+        if (filtered.length === 0) {
+            const $message = document.createElement("p");
+            $message.textContent = "There are no tasks";
+            $filterView.append($filterName, $filterItems, $message);
+        } else {
+            $filterView.append($filterName, $filterItems);
+        }
 
         $content.textContent = "";
         $content.append($filterView);
