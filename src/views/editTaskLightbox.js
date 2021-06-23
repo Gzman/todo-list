@@ -24,6 +24,7 @@ import { format } from "date-fns";
 
     const Feedback = (() => {
         const $feedback = document.querySelector(".edit-task-feedback");
+
         const reset = () => {
             $feedback.classList.remove("showItem");
             $feedback.textContent = "";
@@ -56,7 +57,7 @@ import { format } from "date-fns";
         }
 
         if ($description.value.length < 1) {
-            errors.push({ id: $description, message: "Please fll out a desscription" });
+            errors.push({ id: $description, message: "Please fill out a desscription" });
         }
 
         const now = new Date("YYYY-MM-DD");
@@ -85,7 +86,7 @@ import { format } from "date-fns";
                 description: $description.value,
                 dueDate: ($dueDate.value) ? new Date($dueDate.value) : null,
                 priority: $priority.value,
-                isComplete : taskToEditComplete,
+                isComplete: taskToEditComplete,
             });
             close();
         } else {

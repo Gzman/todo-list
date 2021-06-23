@@ -142,10 +142,6 @@ main {
   background-color: deeppink;
 }
 
-.new-task-feedback, .edit-task-feedback {
-  display: none;
-}
-
 .filter-tags-lightbox {
   background-color: cornsilk;
 }
