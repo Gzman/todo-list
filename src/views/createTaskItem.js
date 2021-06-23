@@ -56,7 +56,10 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
 
   $taskItem.append($isComplete, $name, $controlls, $dueDate);
 
-  ViewMediator.subscribe(ViewEvents.EDIT_TASK, ({ title, dueDate, priority, isComplete }) => {
+  ViewMediator.subscribe(ViewEvents.EDIT_TASK, ({ projectTitle, taskToEdit, title, dueDate, priority }) => {
+    if (!($taskItem.dataset.project === projectTitle && $taskItem.dataset.task === taskToEdit)) {
+      return;
+    }
     if (title) {
       $taskItem.dataset.task = title;
       $name.textContent = title;
@@ -68,9 +71,6 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
     }
     if (dueDate) {
       $dueDate.value = format(dueDate, "yyyy-MM-dd");
-    }
-    if (isComplete) {
-      $isComplete.checked = isComplete;
     }
   });
 

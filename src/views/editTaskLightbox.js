@@ -7,17 +7,19 @@ import { format } from "date-fns";
     const $description = $form.querySelector("#edit-task-description-input");
     const $dueDate = $form.querySelector("#edit-task-date-input");
     const $priority = $form.querySelector("#edit-task-priority-select");
-    let taskToEdit = "";
     let project = "";
+    let taskToEdit = "";
+    let taskToEditComplete = false;
 
     ViewMediator.subscribe(ViewEvents.GET_TASK, ({ projectTitle, task }) => {
-        const { title, description, dueDate, priority } = task;
+        const { title, description, dueDate, priority, isComplete } = task;
         project = projectTitle;
         taskToEdit = title;
         $name.value = title;
         $description.value = description;
         if (dueDate) $dueDate.value = format(dueDate, "yyyy-MM-dd");
         $priority.value = priority;
+        taskToEditComplete = isComplete;
     });
 
     const Feedback = (() => {
@@ -83,6 +85,7 @@ import { format } from "date-fns";
                 description: $description.value,
                 dueDate: ($dueDate.value) ? new Date($dueDate.value) : null,
                 priority: $priority.value,
+                isComplete : taskToEditComplete,
             });
             close();
         } else {
