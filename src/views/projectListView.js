@@ -33,14 +33,6 @@ import { format } from "date-fns"
         }
     });
 
-    $projectItems.addEventListener("click", (event) => {
-        const $project = event.target.closest(".project-item");
-        if (!$project) {
-            const title = $project.querySelector(".project-item-name").textContent;
-            ViewMediator.publish(ViewEvents.PROJECT_SELECTED, title);
-        }
-    });
-
     $projectAddBtn.addEventListener("click", (event) => {
         $newProjectLightbox.classList.add("showItem");
     });

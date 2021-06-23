@@ -12,7 +12,7 @@ class Project {
 
     getTask(title) {
         const task = findTask.call(this, title);
-        return { ...task };
+        return (task)? { ...task } : null;
     }
 
     getTasks() {
@@ -35,8 +35,8 @@ class Project {
         if (task) task.isComplete = isComplete;
     }
 
-    editTask(title, description, dueDate, priority, isComplete = false) {
-        const task = findTask.call(this, title);
+    editTask(taskToEdit, title, description, dueDate, priority, isComplete = false) {
+        const task = findTask.call(this, taskToEdit);
         if (task) {
             if (title) task.title = title;
             if (description) task.description = description;

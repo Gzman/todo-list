@@ -32,17 +32,27 @@ const ProjectController = (() => {
         getProject(projectTitle)?.addTask(title, description, dueDate, priority);
     });
 
-    ViewMediator.subscribe(ViewEvents.REMOVE_TASK, (projectTitle, title) => {
+    ViewMediator.subscribe(ViewEvents.REMOVE_TASK, ({ projectTitle, title }) => {
         getProject(projectTitle)?.removeTask(title);
     });
 
-    ViewMediator.subscribe(ViewEvents.EDIT_TASK, ({ projectTitle, title, description, dueDate, priority, isComplete }) => {
-        getProject(projectTitle)?.editTask(title, description, dueDate, priority, isComplete);
+    ViewMediator.subscribe(ViewEvents.EDIT_TASK, ({ projectTitle, taskToEdit, title, description, dueDate, priority, isComplete }) => {
+        getProject(projectTitle)?.editTask(taskToEdit, title, description, dueDate, priority, isComplete);
     });
 
     ViewMediator.subscribe(ViewEvents.EDIT_TASK_CLICKED, ({ projectTitle, title }) => {
         const task = getProject(projectTitle)?.getTask(title);
-        ViewMediator.publish(ViewEvents.GET_TASK, task);
+        ViewMediator.publish(ViewEvents.GET_TASK, { projectTitle, task });
+    });
+
+    ViewMediator.subscribe(ViewEvents.DOES_PROJECT_EXISTS, (projectTitle) => {
+        const projectExists = getProject(projectTitle) ? true : false;
+        ViewMediator.publish(ViewEvents.PROJECT_EXISTS, projectExists);
+    });
+
+    ViewMediator.subscribe(ViewEvents.DOES_TASK_EXISTS, ({ projectTitle, title }) => {
+        const taskExists = (getProject(projectTitle)?.getTask(title)) ? true : false;
+        ViewMediator.publish(ViewEvents.TASK_EXISTS, taskExists);
     });
 
     // Filter

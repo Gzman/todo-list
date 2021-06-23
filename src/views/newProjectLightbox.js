@@ -5,7 +5,6 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
     const $name = $form.querySelector("#new-project-name");
     const $createBtn = $form.querySelector(".new-project-create-btn");
     const $cancelBtn = $form.querySelector(".new-project-cancel-btn");
-    const $projects = document.querySelector(".projects-items");
 
     const Feedback = (() => {
         const $feedback = document.querySelector(".new-project-feedback");
@@ -28,15 +27,20 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
         return { render, reset }
     })();
 
+    let doesProjectExists = true;
+    ViewMediator.subscribe(ViewEvents.PROJECT_EXISTS, (projectExists) => doesProjectExists = projectExists);
+    
     const validate = () => {
         const errors = [];
         if ($name.value.length < 1) {
             errors.push({ id: $name, message: "Please fill out name" });
         }
-        const projectAlreadyExists = [...$projects.children]?.find((item) => item.querySelector(".project-item-name").textContent === $name.value);
-        if (projectAlreadyExists) {
+
+        ViewMediator.publish(ViewEvents.DOES_PROJECT_EXISTS, $name.value);
+        if (doesProjectExists) {
             errors.push({ id: $name, message: "Project already exists." });
         }
+
         return errors;
     }
 

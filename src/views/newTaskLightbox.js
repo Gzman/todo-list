@@ -45,7 +45,7 @@ import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
         if ($description.value.length < 1) {
             errors.push({ id: $description, message: "Please fill out a desscription" });
         }
-        
+
         const now = new Date("YYYY-MM-DD");
         const dueDate = new Date($dueDate.value);
         if (dueDate < now) {

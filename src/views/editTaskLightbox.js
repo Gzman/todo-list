@@ -7,10 +7,13 @@ import { format } from "date-fns";
     const $description = $form.querySelector("#edit-task-description-input");
     const $dueDate = $form.querySelector("#edit-task-date-input");
     const $priority = $form.querySelector("#edit-task-priority-select");
-    let selectedTask = "";
+    let taskToEdit = "";
+    let project = "";
 
-    ViewMediator.subscribe(ViewEvents.GET_TASK, ({ title, description, dueDate, priority, isComplete }) => {
-        selectedTask = title;
+    ViewMediator.subscribe(ViewEvents.GET_TASK, ({ projectTitle, task }) => {
+        const { title, description, dueDate, priority } = task;
+        project = projectTitle;
+        taskToEdit = title;
         $name.value = title;
         $description.value = description;
         if (dueDate) $dueDate.value = format(dueDate, "yyyy-MM-dd");
@@ -37,15 +40,16 @@ import { format } from "date-fns";
         return { render, reset }
     })();
 
+    let taskAlreadyExists = true;
+    ViewMediator.subscribe(ViewEvents.TASK_EXISTS, (taskExists) => taskAlreadyExists = taskExists);
     const validate = () => {
         const errors = [];
         if ($name.value.length < 1) {
             errors.push({ id: $name, message: "Name must be set." });
         }
 
-        const $taskItems = document.querySelector(".current-project-task-items");
-        const taskAlreadyExists = [...$taskItems.children]?.find((item) => item.dataset.task === $name.value);
-        if ($name.value !== selectedTask && taskAlreadyExists) {
+        ViewMediator.publish(ViewEvents.DOES_TASK_EXISTS, { projectTitle: project, title: $name.value });
+        if ($name.value !== taskToEdit && taskAlreadyExists) {
             errors.push({ id: $name, message: "Task already exists." });
         }
 
@@ -66,15 +70,15 @@ import { format } from "date-fns";
         Feedback.reset();
         document.querySelector(".edit-task-container").classList.remove("showItem");
     }
-    
+
     const $saveBtn = $form.querySelector(".edit-task-save-btn");
     $saveBtn.addEventListener("click", (event) => {
         event.preventDefault();
         const errors = validate();
         if (errors.length === 0) {
-            const project = document.querySelector(".current-project-name")?.textContent;
             ViewMediator.publish(ViewEvents.EDIT_TASK, {
-                project,
+                projectTitle: project,
+                taskToEdit,
                 title: $name.value,
                 description: $description.value,
                 dueDate: ($dueDate.value) ? new Date($dueDate.value) : null,
