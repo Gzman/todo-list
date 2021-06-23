@@ -1,5 +1,6 @@
 import { ViewEvents, ViewMediator } from "../../mediator/viewMediator"
 import { createTaskItem, createTaskItems } from "../task/createTaskItem"
+import { createSortSelect } from "./createSortSelect"
 
 function createProjectView(projectTitle, tasks) {
     const $projectView = document.createElement("div");
@@ -19,7 +20,7 @@ function createProjectView(projectTitle, tasks) {
     const $taskItems = $projectView.querySelector(".current-project-task-items");
     createTaskItems(projectTitle, tasks)?.forEach((item) => $taskItems.append(item));
 
-    SortSelect($projectView);
+    createSortSelect($projectView);
 
     const $createBtn = $projectView.querySelector(".current-project-create-btn");
     $createBtn.addEventListener("click", () => document.querySelector(".new-task-container").classList.add("showItem"));
@@ -48,46 +49,6 @@ function createProjectView(projectTitle, tasks) {
     });
 
     return $projectView;
-}
-
-function SortSelect($currentProject) {
-    const $taskItems = $currentProject.querySelector(".current-project-task-items");
-    const $select = $currentProject.querySelector(".current-project-sort");
-    const options = [
-        { value: 0, text: "Title" },
-        { value: 1, text: "Due Date" }
-    ];
-
-    options.forEach((option) => {
-        const $option = document.createElement("option");
-        $option.value = option.value;
-        $option.text = option.text;
-        $select.add($option);
-    });
-
-    const sortTaskItems = (sortAfter) => {
-        const sorted = [...$taskItems.children]?.sort(sortAfter);
-        $taskItems.textContent = "";
-        sorted.forEach((item) => $taskItems.append(item));
-    }
-
-    $select.addEventListener("change", (event) => {
-        const selected = event.currentTarget.value;
-        if (selected === "1") {
-            sortTaskItems((a, b) => {
-                const atitle = a.dataset.task;
-                const bTitle = b.dataset.task;
-                return atitle.localeCompare(bTitle);
-            });
-        }
-        else if (selected === "2") {
-            sortTaskItems((a, b) => {
-                const aDate = new Date(a.querySelector("task-item-date").value);
-                const bDate = new Date(b.querySelector(".task-item-date").value);
-                return aDate - bDate;
-            });
-        }
-    });
 }
 
 export { createProjectView }
