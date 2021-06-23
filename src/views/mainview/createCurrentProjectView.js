@@ -37,9 +37,9 @@ function createProjectView(projectTitle, tasks) {
     });
 
     const $completedBtn = $projectView.querySelector(".current-project-completed-btn");
-    $completedBtn.addEventListener("click", (event) => {
+    $completedBtn.addEventListener("click", () => {
         [...$taskItems.children]
-            ?.filter((item) => item.querySelector(".task-item-complete").checked)
+            ?.filter((item) => !item.querySelector(".task-item-complete").checked)
             .forEach((item) => $taskItems.appendChild(item));
     });
 

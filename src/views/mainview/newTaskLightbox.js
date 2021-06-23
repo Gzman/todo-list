@@ -46,7 +46,8 @@ import { ViewEvents, ViewMediator } from "../../mediator/viewMediator"
             errors.push({ id: $description, message: "Please fill out a desscription" });
         }
 
-        const now = new Date("YYYY-MM-DD");
+        const now = new Date();
+        now.setHours(0);
         const dueDate = new Date($dueDate.value);
         if (dueDate < now) {
             errors.push({ id: $dueDate, message: "Date can't be in the past." });
