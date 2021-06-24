@@ -9,7 +9,7 @@ const ViewEvents = {
     REMOVE_TASK: "RemoveTask",
     EDIT_TASK: "EditTask",
     GET_TASK: "GetTask",
-    
+
     DOES_PROJECT_EXISTS: "DoesProjectExists",
     DOES_TASK_EXISTS: "DoesTaskExists",
     PROJECT_EXISTS: "ProjectExists",
@@ -18,6 +18,8 @@ const ViewEvents = {
     GET_FILTERED_TASKS: "GetFilteredTasks",
     FILTER_TASK_BY_TEXT: "FilterTasks",
     FILTER_COMPLETED_TASKS: "FilterCompletedTasks",
+    FILTER_CRITICAL_TASKS: "FilterCriticalTasks",
+    FILTER_ALL_TASKS: "FilterAllTasks",
     FILTER_TASK_TODAY: "FilterTaskByDate",
     FILTER_BY_WEEK: "FilterByWeek",
     FILTER_BY_MONTH: "FilterByMonth"

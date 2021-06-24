@@ -84,6 +84,16 @@ const ProjectController = (() => {
         ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: "Complete tasks", filtered: completeTasks });
     });
 
+    ViewMediator.subscribe(ViewEvents.FILTER_CRITICAL_TASKS, () => {
+        const criticalTasks = filterTasks((task) => task.priority === "High");
+        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: "Critical tasks", filtered: criticalTasks });
+    });
+
+    ViewMediator.subscribe(ViewEvents.FILTER_ALL_TASKS, () => {
+        const allTasks = filterTasks((task) => task !== null);
+        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: "All tasks", filtered: allTasks });
+    })
+
     ViewMediator.subscribe(ViewEvents.FILTER_BY_WEEK, (week) => {
         const currentWeek = getWeek(new Date());
         const tasksOfThisWeek = filterTasks((task) => getWeek(task.dueDate) === currentWeek);

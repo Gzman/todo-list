@@ -8,10 +8,10 @@ import { format } from "date-fns"
     const $weekBtn = document.querySelector(".projects-week-btn");
     const $monthBtn = document.querySelector(".projects-month-btn");
 
-    $inboxBtn.addEventListener("click", (event) => ViewMediator.publish(ViewEvents.PROJECT_SELECTED, $inboxBtn.textContent));
-    $todayBtn.addEventListener("click", (event) => ViewMediator.publish(ViewEvents.FILTER_TASK_TODAY, format(new Date(), "EEEE")));
-    $weekBtn.addEventListener("click", (event) => ViewMediator.publish(ViewEvents.FILTER_BY_WEEK, `${format(new Date(), "wo")} Week`));
-    $monthBtn.addEventListener("click", (event) => ViewMediator.publish(ViewEvents.FILTER_BY_MONTH, format(new Date(), "LLLL")));
+    $inboxBtn.addEventListener("click", () => ViewMediator.publish(ViewEvents.PROJECT_SELECTED, $inboxBtn.textContent));
+    $todayBtn.addEventListener("click", () => ViewMediator.publish(ViewEvents.FILTER_TASK_TODAY, format(new Date(), "EEEE")));
+    $weekBtn.addEventListener("click", () => ViewMediator.publish(ViewEvents.FILTER_BY_WEEK, `${format(new Date(), "wo")} Week`));
+    $monthBtn.addEventListener("click", () => ViewMediator.publish(ViewEvents.FILTER_BY_MONTH, format(new Date(), "LLLL")));
 
 })();
 
@@ -33,7 +33,7 @@ import { format } from "date-fns"
         }
     });
 
-    $projectAddBtn.addEventListener("click", (event) => {
+    $projectAddBtn.addEventListener("click", () => {
         $newProjectLightbox.classList.add("showItem");
     });
 

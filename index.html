@@ -14,9 +14,11 @@
       <div class="global-filter">
         <input type="text" id="global-filter-text" placeholder="Search Tasks" />
         <button class="filter-btn" id="global-filter-tag">Tags</button>
+        <button class="filter-btn" id="global-filter-critical">Critical</button>
         <button class="filter-btn" id="global-filter-projects">
           Completed
         </button>
+        <button class="filter-btn" id="global-filter-all">All</button>
       </div>
     </header>
     <main>
@@ -81,8 +83,7 @@
           </div>
           <div>
             <label for="task-priority-select">Priority</label>
-            <select id="task-priority-select">
-            </select>
+            <select id="task-priority-select"></select>
           </div>
           <div>
             <button class="new-task-cancel-btn cancel-btn">Cancel</button>
@@ -94,34 +95,42 @@
 
     <!-- Edit Task lightbox-->
     <div class="edit-task-container">
-        <div class="edit-task-lightbox">
-            <h2 class="edit-task-name">Current Task</h2>
-            <div class="edit-task-feedback"></div>
-            <form id="edit-task-form">
-                <div>
-                    <label for="edit-task-name-input">Name</label>
-                    <input id="edit-task-name-input" type="text" placeholder="Task name" /> 
-                </div>
-                <div>
-                    <label for="edit-task-description-input">Description</label>
-                    <input id="edit-task-description-input" rows="5" type="text" placeholder="Description of task" />
-                </div>
-                <div>
-                    <label for="edit-task-date-input">Due Date</label>
-                    <input id="edit-task-date-input" type="date" />
-                </div>
-                <div>
-                    <label for="edit-task-priority-select">Priority</label>
-                    <select id="edit-task-priority-select">
-                    </select>
-                </div>
-                <div>
-                    <button class="edit-task-cancel-btn cancel-btn" >Cancel</button>
-                    <button class="edit-task-save-btn ok-btn">Save</button>
-                </div>
-            </form>
-        </div>
-    </div> 
+      <div class="edit-task-lightbox">
+        <h2 class="edit-task-name">Current Task</h2>
+        <div class="edit-task-feedback"></div>
+        <form id="edit-task-form">
+          <div>
+            <label for="edit-task-name-input">Name</label>
+            <input
+              id="edit-task-name-input"
+              type="text"
+              placeholder="Task name"
+            />
+          </div>
+          <div>
+            <label for="edit-task-description-input">Description</label>
+            <input
+              id="edit-task-description-input"
+              rows="5"
+              type="text"
+              placeholder="Description of task"
+            />
+          </div>
+          <div>
+            <label for="edit-task-date-input">Due Date</label>
+            <input id="edit-task-date-input" type="date" />
+          </div>
+          <div>
+            <label for="edit-task-priority-select">Priority</label>
+            <select id="edit-task-priority-select"></select>
+          </div>
+          <div>
+            <button class="edit-task-cancel-btn cancel-btn">Cancel</button>
+            <button class="edit-task-save-btn ok-btn">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <!-- Filter Tags lightbox-->
     <div class="filter-tags-container">

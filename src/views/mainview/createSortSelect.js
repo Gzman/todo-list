@@ -39,9 +39,9 @@ function createSortSelect($ProjectView) {
     }
 
     const sortTaskItems = (sortAfter) => {
-        const sorted = [...$taskItems.children]?.sort(sortAfter);
-        $taskItems.textContent = "";
-        sorted.forEach((item) => $taskItems.append(item));
+        [...$taskItems.children]
+            ?.sort(sortAfter)
+            .forEach((item) => $taskItems.appendChild(item));
     }
 
     $select.addEventListener("change", (event) => {
