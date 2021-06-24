@@ -1,4 +1,5 @@
 import { ViewEvents, ViewMediator } from "../../mediator/viewMediator"
+import { taskPriorities } from "../task/taskPriorities"
 
 (function NewTaskLightbox() {
     const $form = document.querySelector("#task-form");
@@ -8,6 +9,14 @@ import { ViewEvents, ViewMediator } from "../../mediator/viewMediator"
     const $priority = $form.querySelector("#task-priority-select");
     const $cancelBtn = $form.querySelector(".new-task-cancel-btn");
     const $createBtn = $form.querySelector(".new-task-create-btn");
+
+    const initPrioritySelect = (() => {
+        taskPriorities.forEach((priority) => {
+            const $option = document.createElement("option");
+            $option.text = priority;
+            $priority.add($option);
+        });
+    })();
 
     const Feedback = (() => {
         const $feedback = document.querySelector(".task-feedback");

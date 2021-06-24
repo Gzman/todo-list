@@ -1,4 +1,5 @@
 import { ViewEvents, ViewMediator } from "../../mediator/viewMediator";
+import { taskPriorities, getPriorityWeight } from "./taskPriorities";
 import { format } from "date-fns";
 
 function createTaskItem(projectTitle, { title, description, priority, dueDate, isComplete }) {
@@ -65,8 +66,7 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
       $name.textContent = title;
     }
     if (priority) {
-      const priorities = ["low", "medium", "high"];
-      priorities.forEach((priority) => $taskItem.classList.remove(`priority-${priority.toLowerCase()}`));
+      taskPriorities.forEach((priority) => $taskItem.classList.remove(`priority-${priority.toLowerCase()}`));
       $taskItem.classList.add(`priority-${priority.toLowerCase()}`);
     }
     if (dueDate) {
@@ -82,13 +82,15 @@ function createTaskItems(projectTitle, tasks) {
 }
 
 /*function createExtendView(description) {
-    const $div = document.createElement("div");
+    const $descriptionDisplay = document.createElement("div");
+    $descriptionDisplay.classList.add("hideItem");
     const $textArea = document.createElement("textarea");
     $textArea.readOnly = true;
     $textArea.style.display = "none";
     $textArea.rows = 5;
     $textArea.value = description;
-    return $textArea;
+    $descriptionDisplay.append($textArea);
+    return $descriptionDisplay;
 }*/
 
 export { createTaskItem, createTaskItems };

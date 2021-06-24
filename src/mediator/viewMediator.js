@@ -9,6 +9,7 @@ const ViewEvents = {
     REMOVE_TASK: "RemoveTask",
     EDIT_TASK: "EditTask",
     GET_TASK: "GetTask",
+    
     DOES_PROJECT_EXISTS: "DoesProjectExists",
     DOES_TASK_EXISTS: "DoesTaskExists",
     PROJECT_EXISTS: "ProjectExists",

@@ -1,3 +1,4 @@
+import { getPriorityWeight, taskPriorities } from "../task/taskPriorities"
 
 function createSortSelect($ProjectView) {
     const $taskItems = $ProjectView.querySelector(".current-project-task-items");
@@ -26,15 +27,9 @@ function createSortSelect($ProjectView) {
     }
 
     const sortAfterPriority = (a, b) => {
-        const priorities = ["low", "medium", "high"];
-        const aPriority = priorities.filter((p) => a.classList.contains(`priority-${p}`));
-        const bPriority = priorities.filter((p) => b.classList.contains(`priority-${p}`));
-        const pWeight = {
-            "low": 1,
-            "medium": 2,
-            "high": 3,
-        }
-        return pWeight[bPriority] - pWeight[aPriority];
+        const aPriority = taskPriorities.find((p) => a.classList.contains(`priority-${p.toLowerCase()}`));
+        const bPriority = taskPriorities.find((p) => b.classList.contains(`priority-${p.toLowerCase()}`));
+        return getPriorityWeight(bPriority) - getPriorityWeight(aPriority);
     }
 
     const sortAfterTitle = (a, b) => {

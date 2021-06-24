@@ -1,5 +1,5 @@
-import { ViewEvents, ViewMediator } from "../mediator/viewMediator.js"
-import { Project } from "../buisness-logic/project.js"
+import { ViewEvents, ViewMediator } from "../mediator/viewMediator"
+import { Project } from "../buisness-logic/project"
 import { getWeek } from "date-fns"
 
 const ProjectController = (() => {

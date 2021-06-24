@@ -1,4 +1,5 @@
 import { ViewEvents, ViewMediator } from "../../mediator/viewMediator"
+import { taskPriorities } from "./taskPriorities"
 import { format } from "date-fns";
 
 (function EditTaskLightbox() {
@@ -10,6 +11,14 @@ import { format } from "date-fns";
     let project = "";
     let taskToEdit = "";
     let taskToEditComplete = false;
+
+    const initPrioritySelet = (() => {
+        taskPriorities.forEach((priority) => {
+            const $option = document.createElement("option");
+            $option.text = priority;
+            $priority.add($option);
+        })
+    })();
 
     ViewMediator.subscribe(ViewEvents.GET_TASK, ({ projectTitle, task }) => {
         const { title, description, dueDate, priority, isComplete } = task;
