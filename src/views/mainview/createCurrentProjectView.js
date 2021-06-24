@@ -48,11 +48,7 @@ function createProjectView(projectTitle, tasks) {
         $taskItems.append($task);
     });
 
-    return $projectView; // Critical task button, should description also be searched for? All tasks? Dropdown for priority?
-    // all tasks -> All priorities -> allow multiple filters -> filter result -> filter -> result filter
-    // search bar with dopdwon search title or description, filter for specific date
-    // Critical Tasks, Specific Date, search text with dropdown (title, description)
-    // Multiple Filter clickable ?
+    return $projectView;
 }
 
 export { createProjectView }

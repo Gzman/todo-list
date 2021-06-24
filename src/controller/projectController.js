@@ -74,8 +74,9 @@ const ProjectController = (() => {
     });
 
     ViewMediator.subscribe(ViewEvents.FILTER_TASK_BY_TEXT, (text) => {
-        if (text === "") return;
-        const taskFilteredByText = filterTasks((task) => task.title.includes(text) || task.priority.includes(text));
+        const searchText = text.toLowerCase();
+        if (searchText === "") return;
+        const taskFilteredByText = filterTasks((task) => task.title.toLowerCase().includes(searchText) || task.priority.toLowerCase() === searchText);
         ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: text, filtered: taskFilteredByText });
     });
 
