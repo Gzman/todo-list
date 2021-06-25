@@ -1,6 +1,6 @@
 import { ViewEvents, ViewMediator } from "../mediator/viewMediator"
 import { Project } from "../buisness-logic/project"
-import { getWeek } from "date-fns"
+import { getWeek, format } from "date-fns"
 
 const ProjectController = (() => {
     let projects = [new Project("Inbox")];
@@ -75,9 +75,11 @@ const ProjectController = (() => {
 
     ViewMediator.subscribe(ViewEvents.FILTER_TASK_BY_TEXT, (text) => {
         const searchText = text.toLowerCase();
-        if (searchText === "") return;
-        const taskFilteredByText = filterTasks((task) => task.title.toLowerCase().includes(searchText) || task.priority.toLowerCase() === searchText);
-        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: text, filtered: taskFilteredByText });
+        const taskFilteredByText = filterTasks((task) => {
+            const date = (task.dueDate) ? format(task.dueDate, "dd.MM.yyyy") : "";
+            return task.title.toLowerCase().includes(searchText) || task.priority.toLowerCase() === searchText || date.includes(searchText);
+        });
+        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: `Search: ${text}`, filtered: taskFilteredByText });
     });
 
     ViewMediator.subscribe(ViewEvents.FILTER_COMPLETED_TASKS, () => {
