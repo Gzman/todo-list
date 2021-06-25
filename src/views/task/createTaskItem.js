@@ -1,5 +1,5 @@
 import { ViewEvents, ViewMediator } from "../../mediator/viewMediator";
-import { taskPriorities, getPriorityWeight } from "./taskPriorities";
+import { taskPriorities } from "./taskPriorities";
 import { format } from "date-fns";
 
 function createTaskItem(projectTitle, { title, description, priority, dueDate, isComplete }) {
@@ -16,15 +16,19 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
     projectTitle: $taskItem.dataset.project,
     taskToEdit: $taskItem.dataset.task,
     title: $taskItem.dataset.task,
-    description,
-    priority,
-    dueDate,
+    description: $description.textContent,
+    priority: extractPriority($taskItem),
+    dueDate: ($dueDate.value) ? new Date($dueDate.value) : null,
     isComplete: event.currentTarget.checked
   }));
 
   const $name = document.createElement("p");
   $name.classList.add("task-item-name");
   $name.textContent = title;
+
+  const $description = document.createElement("p");
+  $description.classList.add("task-item-description");
+  $description.textContent = description;
 
   const $controlls = document.createElement("div");
   $controlls.classList.add("task-item-controlls");
@@ -47,7 +51,8 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
 
   $controlls.append($editBtn, $removeBtn);
 
-  $taskItem.classList.add(`priority-${priority.toLowerCase()}`);
+  $taskItem.classList.add(`priority-${priority}`);
+
 
   const $dueDate = document.createElement("input");
   $dueDate.classList.add("task-item-date");
@@ -55,9 +60,18 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
   if (dueDate) $dueDate.value = format(dueDate, "yyyy-MM-dd");
   $dueDate.readOnly = true;
 
-  $taskItem.append($isComplete, $name, $controlls, $dueDate);
+  const $normalView = document.createElement("div");
+  $normalView.classList.add("task-item-normal-view");
+  $normalView.append($isComplete, $name, $controlls, $dueDate);
 
-  ViewMediator.subscribe(ViewEvents.EDIT_TASK, ({ projectTitle, taskToEdit, title, dueDate, priority }) => {
+  const $detailView = document.createElement("div");
+  $detailView.classList.add("task-item-detail-view", "hideItem");
+  $detailView.append($description);
+  $name.addEventListener("click", () => $detailView.classList.toggle("hideItem"));
+
+  $taskItem.append($normalView, $detailView);
+
+  ViewMediator.subscribe(ViewEvents.EDIT_TASK, ({ projectTitle, taskToEdit, title, description, dueDate, priority }) => {
     if (!($taskItem.dataset.project === projectTitle && $taskItem.dataset.task === taskToEdit)) {
       return;
     }
@@ -65,9 +79,12 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
       $taskItem.dataset.task = title;
       $name.textContent = title;
     }
+    if (description) {
+      $description.textContent = description;
+    }
     if (priority) {
-      taskPriorities.forEach((priority) => $taskItem.classList.remove(`priority-${priority.toLowerCase()}`));
-      $taskItem.classList.add(`priority-${priority.toLowerCase()}`);
+      taskPriorities.forEach((priority) => $taskItem.classList.remove(`priority-${priority}`));
+      $taskItem.classList.add(`priority-${priority}`);
     }
     if (dueDate) {
       $dueDate.value = format(dueDate, "yyyy-MM-dd");
@@ -81,16 +98,8 @@ function createTaskItems(projectTitle, tasks) {
   return tasks?.map((task) => createTaskItem(projectTitle, task));
 }
 
-/*function createExtendView(description) {
-    const $descriptionDisplay = document.createElement("div");
-    $descriptionDisplay.classList.add("hideItem");
-    const $textArea = document.createElement("textarea");
-    $textArea.readOnly = true;
-    $textArea.style.display = "none";
-    $textArea.rows = 5;
-    $textArea.value = description;
-    $descriptionDisplay.append($textArea);
-    return $descriptionDisplay;
-}*/
+function extractPriority($taskItem) {
+  return taskPriorities.find((priority) => $taskItem.className.includes(priority));
+}
 
 export { createTaskItem, createTaskItems };

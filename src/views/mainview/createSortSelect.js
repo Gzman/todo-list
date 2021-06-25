@@ -27,8 +27,8 @@ function createSortSelect($ProjectView) {
     }
 
     const sortAfterPriority = (a, b) => {
-        const aPriority = taskPriorities.find((p) => a.classList.contains(`priority-${p.toLowerCase()}`));
-        const bPriority = taskPriorities.find((p) => b.classList.contains(`priority-${p.toLowerCase()}`));
+        const aPriority = taskPriorities.find((priority) => a.classList.contains(`priority-${priority}`));
+        const bPriority = taskPriorities.find((priority) => b.classList.contains(`priority-${priority}`));
         return getPriorityWeight(bPriority) - getPriorityWeight(aPriority);
     }
 

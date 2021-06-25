@@ -90,7 +90,15 @@ main {
   flex-direction: column;
 }
 
-.task-item, .task-item-controlls {
+.task-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.task-item-normal-view,
+.task-item-detail-view,
+.task-item-controller {
   display: flex;
   gap: 0.5rem;
 }
@@ -146,14 +154,14 @@ main {
   background-color: cornsilk;
 }
 
-.priority-low {
+.priority-Low {
   border: 0.3rem solid green;
 }
 
-.priority-medium {
+.priority-Medium {
   border: 0.3rem solid orange;
 }
 
-.priority-high {
+.priority-High {
   border: 0.3rem solid red;
 }
