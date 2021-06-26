@@ -30,9 +30,6 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
   $description.classList.add("task-item-description");
   $description.textContent = description;
 
-  const $controlls = document.createElement("div");
-  $controlls.classList.add("task-item-controlls");
-
   const $removeBtn = document.createElement("button");
   $removeBtn.classList.add("task-item-delete");
   $removeBtn.textContent = "Delete";
@@ -49,10 +46,11 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
     ViewMediator.publish(ViewEvents.EDIT_TASK_CLICKED, { projectTitle: $taskItem.dataset.project, title: $taskItem.dataset.task });
   });
 
+  const $controlls = document.createElement("div");
+  $controlls.classList.add("task-item-controlls");
   $controlls.append($editBtn, $removeBtn);
 
   $taskItem.classList.add(`priority-${priority}`);
-
 
   const $dueDate = document.createElement("input");
   $dueDate.classList.add("task-item-date");

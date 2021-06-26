@@ -23,13 +23,15 @@ import { createTaskItems } from "../task/createTaskItem"
         const $filterView = document.createElement("div");
         $filterView.classList.add("current-filter");
 
-        const $filterName = document.createElement("p");
+        const $filterName = document.createElement("h2");
+        $filterName.classList.add("current-filter-name");
         $filterName.textContent = filter;
 
         const $filterItems = createFilterItems(filtered);
 
         if (filtered.length === 0) {
             const $message = document.createElement("p");
+            $message.classList.add("current-filter-message");
             $message.textContent = "There are no tasks";
             $filterView.append($filterName, $filterItems, $message);
         } else {

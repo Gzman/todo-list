@@ -7,7 +7,7 @@ function createProjectView(projectTitle, tasks) {
     $projectView.classList.add("current-project");
     $projectView.innerHTML = `
     <h2 class="current-project-name">${projectTitle}</h2>
-    <div class="current-project-ctrls">
+    <div class="current-project-controlls">
       <button class="current-project-create-btn">Create Task</button>
       <button class="current-project-delete-btn">Delete Project</button>
       <button class="current-project-completed-btn filter-btn">

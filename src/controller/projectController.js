@@ -1,6 +1,14 @@
 import { ViewEvents, ViewMediator } from "../mediator/viewMediator"
 import { Project } from "../buisness-logic/project"
-import { getWeek, format } from "date-fns"
+import {
+    filterByText,
+    filterCriticalTasks,
+    filterCompleteTasks, 
+    filterAllTasks,
+    filterTasksToday,
+    filterTasksByThisWeek,
+    filterTasksByThisMonth
+} from "./taskFilter"
 
 const ProjectController = (() => {
     let projects = [new Project("Inbox")];
@@ -55,58 +63,40 @@ const ProjectController = (() => {
         ViewMediator.publish(ViewEvents.TASK_EXISTS, taskExists);
     });
 
-    // Filter
-
-    const filterTasks = (filter) => {
-        return projects.reduce((filtered, project) => {
-            const tasks = project.getTasks().filter(filter);
-            if (tasks?.length >= 1) {
-                filtered.push({ project: project.title, tasks });
-            }
-            return filtered;
-        }, []);
-    }
-
-    ViewMediator.subscribe(ViewEvents.FILTER_TASK_TODAY, (date) => {
-        const today = new Date();
-        const tasksOfDate = filterTasks((task) => task.dueDate?.getDate() === today.getDate());
-        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: date, filtered: tasksOfDate });
-    });
-
+    // Task filtering
     ViewMediator.subscribe(ViewEvents.FILTER_TASK_BY_TEXT, (text) => {
-        const searchText = text.toLowerCase();
-        const taskFilteredByText = filterTasks((task) => {
-            const date = (task.dueDate) ? format(task.dueDate, "dd.MM.yyyy") : "";
-            return task.title.toLowerCase().includes(searchText) || task.priority.toLowerCase() === searchText || date.includes(searchText);
-        });
-        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: `Search: ${text}`, filtered: taskFilteredByText });
+        const tasks = filterByText(projects, text);
+        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: `Search: ${text}`, filtered: tasks });
     });
 
     ViewMediator.subscribe(ViewEvents.FILTER_COMPLETED_TASKS, () => {
-        const completeTasks = filterTasks((task) => task.isComplete);
-        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: "Complete tasks", filtered: completeTasks });
+        const tasks = filterCompleteTasks(projects);
+        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: "Complete Tasks", filtered: tasks });
     });
 
     ViewMediator.subscribe(ViewEvents.FILTER_CRITICAL_TASKS, () => {
-        const criticalTasks = filterTasks((task) => task.priority === "High");
-        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: "Critical tasks", filtered: criticalTasks });
+        const tasks = filterCriticalTasks(projects);
+        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: "Critical Tasks", filtered: tasks });
     });
 
     ViewMediator.subscribe(ViewEvents.FILTER_ALL_TASKS, () => {
-        const allTasks = filterTasks((task) => task !== null);
-        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: "All tasks", filtered: allTasks });
-    })
+        const tasks = filterAllTasks(projects);
+        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: "All Tasks", filtered: tasks });
+    });
+
+    ViewMediator.subscribe(ViewEvents.FILTER_TASK_TODAY, (today) => {
+        const tasks = filterTasksToday(projects);
+        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: today, filtered: tasks });
+    });
 
     ViewMediator.subscribe(ViewEvents.FILTER_BY_WEEK, (week) => {
-        const currentWeek = getWeek(new Date());
-        const tasksOfThisWeek = filterTasks((task) => getWeek(task.dueDate) === currentWeek);
-        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: week, filtered: tasksOfThisWeek });
+        const tasks = filterTasksByThisWeek(projects);
+        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: week, filtered: tasks });
     });
 
     ViewMediator.subscribe(ViewEvents.FILTER_BY_MONTH, (month) => {
-        const today = new Date();
-        const tasksOfThisMonth = filterTasks((task) => task.dueDate?.getFullYear() === today.getFullYear() && task.dueDate?.getMonth() === today.getMonth());
-        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: month, filtered: tasksOfThisMonth });
+        const tasks = filterTasksByThisMonth(projects);
+        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: month, filtered: tasks });
     });
 
 })();
