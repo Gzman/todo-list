@@ -1,5 +1,5 @@
 import { ViewEvents, ViewMediator } from "../../mediator/viewMediator";
-import { setActive } from "../util"
+import { setItemActive } from "../util"
 
 function createProjectItem(title) {
     const $name = document.createElement("p");
@@ -8,11 +8,16 @@ function createProjectItem(title) {
 
     const $projectItem = document.createElement("div");
     $projectItem.classList.add("project-item");
-    $projectItem.addEventListener("click", (event) => {
-        setActive(event.currentTarget);
-        ViewMediator.publish(ViewEvents.PROJECT_SELECTED, $name.textContent);
-    });
+    $projectItem.addEventListener("click", () => ViewMediator.publish(ViewEvents.PROJECT_SELECTED, $name.textContent));
     $projectItem.append($name);
+
+    const setActive = (title) => {
+        const childOfProjectList = $projectItem.closest(".project-list-view");
+        if ($name.textContent === title && childOfProjectList) {
+            setItemActive($projectItem);
+        }
+    }
+    ViewMediator.subscribe(ViewEvents.PROJECT_SELECTED, (title) => setActive(title));
 
     return $projectItem;
 }
