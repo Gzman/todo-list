@@ -93,6 +93,7 @@ main {
   background-color: transparent;
   color: var(--font-color);
   border: none;
+  border-radius: 0.3rem;
   cursor: pointer;
 }
 
@@ -129,14 +130,18 @@ main {
 
 .project-item {
   padding: 0.5rem;
-  max-width: fit-content;
+  max-width: max-content;
   overflow-wrap: break-word;
+  border-radius: 0.3rem;
   cursor: pointer;
 }
 
 .project-item:hover {
   background-color: var(--highlight-color);
-  border-radius: 0.3rem;
+}
+
+.activeItem {
+  background-color: var(--highlight-color) !important;
 }
 
 .main-view {

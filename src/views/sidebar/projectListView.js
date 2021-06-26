@@ -1,5 +1,6 @@
 import { ViewEvents, ViewMediator } from "../../mediator/viewMediator"
 import { createProjectItem } from "../project/createProjectItem"
+import { setActive } from "../util";
 import { format } from "date-fns"
 
 (function ProjectFilter() {
@@ -8,10 +9,22 @@ import { format } from "date-fns"
     const $weekBtn = document.querySelector(".projects-week-btn");
     const $monthBtn = document.querySelector(".projects-month-btn");
 
-    $inboxBtn.addEventListener("click", () => ViewMediator.publish(ViewEvents.PROJECT_SELECTED, $inboxBtn.textContent));
-    $todayBtn.addEventListener("click", () => ViewMediator.publish(ViewEvents.FILTER_TASK_TODAY, format(new Date(), "EEEE")));
-    $weekBtn.addEventListener("click", () => ViewMediator.publish(ViewEvents.FILTER_BY_WEEK, `${format(new Date(), "wo")} Week`));
-    $monthBtn.addEventListener("click", () => ViewMediator.publish(ViewEvents.FILTER_BY_MONTH, format(new Date(), "LLLL")));
+    $inboxBtn.addEventListener("click", (event) => {
+        setActive(event.currentTarget);
+        ViewMediator.publish(ViewEvents.PROJECT_SELECTED, $inboxBtn.textContent)
+    });
+    $todayBtn.addEventListener("click", (event) => {
+        setActive(event.currentTarget);
+        ViewMediator.publish(ViewEvents.FILTER_TASK_TODAY, format(new Date(), "EEEE"))
+    });
+    $weekBtn.addEventListener("click", (event) => {
+        setActive(event.currentTarget)
+        ViewMediator.publish(ViewEvents.FILTER_BY_WEEK, `${format(new Date(), "wo")} Week`)
+    });
+    $monthBtn.addEventListener("click", (event) => {
+        setActive(event.currentTarget);
+        ViewMediator.publish(ViewEvents.FILTER_BY_MONTH, format(new Date(), "LLLL"))
+    });
 
 })();
 
