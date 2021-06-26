@@ -19,6 +19,12 @@ function createProjectItem(title) {
     }
     ViewMediator.subscribe(ViewEvents.PROJECT_SELECTED, (title) => setActive(title));
 
+    ViewMediator.subscribe(ViewEvents.REMOVE_PROJECT, (title) => {
+        if ($name.textContent === title) {
+            $projectItem.remove();
+        }
+    });
+
     return $projectItem;
 }
 

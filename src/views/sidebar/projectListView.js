@@ -38,14 +38,6 @@ import { format } from "date-fns"
         $projectItems.append($project);
     });
 
-    ViewMediator.subscribe(ViewEvents.REMOVE_PROJECT, (title) => {
-        if ($projectItems.hasChildNodes()) {
-            [...$projectItems.children]
-                .find((item) => item.querySelector(".project-item-name").textContent === title)
-                .remove();
-        }
-    });
-
     $projectAddBtn.addEventListener("click", () => {
         $newProjectLightbox.classList.add("showItem");
     });
