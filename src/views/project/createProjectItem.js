@@ -12,6 +12,11 @@ function createProjectItem(title) {
     $projectItem.append($name);
 
     const setActive = (title) => {
+        if (title === "Inbox" && $name.textContent === "Inbox") {
+            const inbox = document.querySelector(".projects-inbox-btn");
+            setItemActive(inbox);
+            return;
+        }
         const childOfProjectList = $projectItem.closest(".project-list-view");
         if ($name.textContent === title && childOfProjectList) {
             setItemActive($projectItem);

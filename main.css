@@ -53,8 +53,7 @@ header {
   gap: 1rem;
 }
 
-#global-filter-text,
-.global-filter button {
+.global-filter > * {
   padding: 0.5rem;
 }
 
@@ -163,6 +162,7 @@ main {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  overflow: auto;
 }
 
 .current-project-controlls {
@@ -170,8 +170,7 @@ main {
   gap: 0.5rem;
 }
 
-.current-project-controlls button,
-.current-project-controlls select {
+.current-project-controlls > * {
   padding: 0.5rem;
 }
 
@@ -207,7 +206,7 @@ main {
 }*/
 
 .task-item:hover {
-  background-color: var(--highlight-color); 
+  background-color: var(--highlight-color);
 }
 
 .task-item-name:hover {
@@ -273,9 +272,9 @@ main {
   background-color: rgb(221, 148, 148);
 }
 
-.new-project-feedback p,
-.task-feedback p,
-.edit-task-feedback p {
+.new-project-feedback > p,
+.task-feedback > p,
+.edit-task-feedback > p {
   padding: 0.5rem;
   color: rgb(177, 0, 0);
 }
@@ -298,25 +297,17 @@ main {
   gap: 1rem;
 }
 
-#new-project-form div,
-#task-form div,
-#edit-task-form div {
+#new-project-form > div,
+#task-form > div,
+#edit-task-form > div {
   display: grid;
   grid-template-columns: 30% auto;
   justify-items: stretch;
 }
 
-#new-project-form input,
-#new-project-form button,
-#new-project-form label,
-#new-project-form select,
-#task-form input,
-#task-form button,
-#task-form label,
-#task-form select #edit-project-form input,
-#edit-task-form button,
-#edit-task-form label,
-#edit-task-form select {
+#new-project-form > div > *,
+#task-form > div > *, 
+#edit-task-form > div > * {
   padding: 0.5rem;
 }
 
@@ -327,6 +318,12 @@ main {
   justify-content: flex-end;
   justify-items: flex-end;
   gap: 0.5rem;
+}
+
+.new-project-btn > button,
+.new-task-btn > button,
+.edit-task-btn > button {
+  justify-self: flex-end;
 }
 
 .showItem {
@@ -347,4 +344,22 @@ main {
 
 .priority-High {
   border-left: 0.75rem solid red;
+}
+
+@keyframes shrink {
+  0% {
+    transform: scale(0.97);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0%;
+  }
+  100% {
+    opacity: 100%;
+  }
 }
