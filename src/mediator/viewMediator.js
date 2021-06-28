@@ -1,6 +1,9 @@
 import { PubSub } from "./pubsub.js"
 
 const ViewEvents = {
+    PROJECTS_LOADED: "ProjectsLoaded",
+    PROJECTS_AVAILABLE: "ProjectsAvailable",
+
     PROJECT_SELECTED: "ProjectSelected",
     RENDER_PROJECT: "RenderProject",
     CREATE_PROJECT: "CreateProject",

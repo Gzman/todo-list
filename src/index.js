@@ -1,4 +1,5 @@
-import {} from "./controller/projectController.js"
+import {} from "./persistence/storage"
+import {} from "./controller/projectController"
 import {} from "./views/header/headerView"
 import {} from "./views/sidebar/projectListView"
 import {} from "./views/sidebar/newProjectLightbox"

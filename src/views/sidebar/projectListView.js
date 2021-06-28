@@ -33,6 +33,13 @@ import { format } from "date-fns"
     const $projectAddBtn = document.querySelector(".projects-add-btn");
     const $newProjectLightbox = document.querySelector(".new-project-container");
 
+    ViewMediator.subscribe(ViewEvents.PROJECTS_LOADED, ({ projects }) => {
+        projects
+            .map(project => createProjectItem(project))
+            .forEach(item => $projectItems.appendChild(item));
+    });
+    ViewMediator.publish(ViewEvents.PROJECTS_AVAILABLE, null);
+
     ViewMediator.subscribe(ViewEvents.CREATE_PROJECT, (title) => {
         const $project = createProjectItem(title);
         $projectItems.append($project);
