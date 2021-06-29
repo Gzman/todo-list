@@ -93,6 +93,11 @@ const ProjectController = (() => {
         ViewMediator.publish(ViewEvents.TASK_EXISTS, taskExists);
     });
 
+    ViewMediator.subscribe(ViewEvents.GET_TASK_COUNT, (project) => {
+        const count = getProject(project).tasks.length;
+        ViewMediator.publish(ViewEvents.GET_TASK_COUNT_RESP, { projectTitle: project, taskCount: count });
+    });
+
     // Task filtering
     ViewMediator.subscribe(ViewEvents.FILTER_TASK_BY_TEXT, (text) => {
         const tasks = filterByText(projects, text);

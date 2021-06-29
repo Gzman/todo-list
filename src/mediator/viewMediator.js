@@ -13,6 +13,9 @@ const ViewEvents = {
     EDIT_TASK: "EditTask",
     GET_TASK: "GetTask",
 
+    GET_TASK_COUNT: "GetTaskCount",
+    GET_TASK_COUNT_RESP: "GetTaskCountResponse",
+
     DOES_PROJECT_EXISTS: "DoesProjectExists",
     DOES_TASK_EXISTS: "DoesTaskExists",
     PROJECT_EXISTS: "ProjectExists",

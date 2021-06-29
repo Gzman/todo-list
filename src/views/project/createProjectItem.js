@@ -1,4 +1,5 @@
 import { ViewEvents, ViewMediator } from "../../mediator/viewMediator";
+import { createCounter } from "./createCounter";
 import { setItemActive } from "../util"
 
 function createProjectItem(title) {
@@ -6,10 +7,12 @@ function createProjectItem(title) {
     $name.classList.add("project-item-name");
     $name.textContent = title;
 
+    const $counter = createCounter(title);
+
     const $projectItem = document.createElement("div");
     $projectItem.classList.add("project-item");
     $projectItem.addEventListener("click", () => ViewMediator.publish(ViewEvents.PROJECT_SELECTED, $name.textContent));
-    $projectItem.append($name);
+    $projectItem.append($name, $counter);
 
     const setActive = (title) => {
         if (title === "Inbox" && $name.textContent === "Inbox") {
@@ -22,13 +25,15 @@ function createProjectItem(title) {
             setItemActive($projectItem);
         }
     }
-    ViewMediator.subscribe(ViewEvents.PROJECT_SELECTED, (title) => setActive(title));
 
-    ViewMediator.subscribe(ViewEvents.REMOVE_PROJECT, (title) => {
+    const remove = (title) => {
         if ($name.textContent === title) {
             $projectItem.remove();
         }
-    });
+    }
+
+    ViewMediator.subscribe(ViewEvents.PROJECT_SELECTED, setActive);
+    ViewMediator.subscribe(ViewEvents.REMOVE_PROJECT, remove);
 
     return $projectItem;
 }

@@ -9,6 +9,7 @@
 
 :root {
   --font-color: rgb(55, 55, 55);
+  --font-color-light: rgb(122, 122, 122);
   --primary-color: #1cac78;
   --secondary-color: rgb(234, 234, 234);
   --background-color: rgb(250, 250, 250);
@@ -128,11 +129,16 @@ main {
 }
 
 .project-item {
+  display: flex;
+  justify-content: space-between;
   padding: 0.5rem;
-  max-width: max-content;
   overflow-wrap: break-word;
   border-radius: 0.3rem;
   cursor: pointer;
+}
+
+.project-item-counter {
+  color: var(--font-color-light);
 }
 
 .project-item:hover {
@@ -308,7 +314,7 @@ main {
 }
 
 #new-project-form > div > *,
-#task-form > div > *, 
+#task-form > div > *,
 #edit-task-form > div > * {
   padding: 0.5rem;
 }
