@@ -1,137 +1,124 @@
 import { ViewEvents, ViewMediator } from "../mediator/viewMediator"
 import { StorageEvents, StorageMediator } from "../mediator/storageMediator"
 import { Project } from "../buisness-logic/project"
-import {
-    filterByText,
-    filterCriticalTasks,
-    filterCompleteTasks,
-    filterAllTasks,
-    filterTasksToday,
-    filterTasksByThisWeek,
-    filterTasksByThisMonth
-} from "./taskFilter"
+import { createExampleProjects } from "./exampleProject"
+import { filterByText, filterCritical, filterComplete, filterAll, filterToday, filterByThisWeek, filterByThisMonth } from "./taskFilter"
 
-const convertStringifiedProjects = (projects) => {
-    const deserialized = projects.map((project) => Object.assign(new Project(), project));
-    deserialized.forEach((project) => project.tasks
+const inbox = new Project("Inbox");
+let projects = [inbox];
+
+// Load stored projects into memory
+StorageMediator.subscribe(StorageEvents.GET_STORED_PROJECTS_RESP, loadStoredProjects);
+StorageMediator.publish(StorageEvents.GET_STORED_PROJECTS, null);
+ViewMediator.subscribe(ViewEvents.GET_PROJECTS, passStoredProjectsToView);
+
+// Create, remove and edit projects, tasks
+ViewMediator.subscribe(ViewEvents.GET_PROJECT, passProjectToView);
+ViewMediator.subscribe(ViewEvents.CREATE_PROJECT, createProject);
+ViewMediator.subscribe(ViewEvents.REMOVE_PROJECT, removeProject);
+ViewMediator.subscribe(ViewEvents.CREATE_TASK, createTask);
+ViewMediator.subscribe(ViewEvents.REMOVE_TASK, removeTask);
+ViewMediator.subscribe(ViewEvents.EDIT_TASK, editTask);
+ViewMediator.subscribe(ViewEvents.GET_TASK, getTask);
+ViewMediator.subscribe(ViewEvents.DOES_PROJECT_EXISTS, doesProjectExists);
+ViewMediator.subscribe(ViewEvents.DOES_TASK_EXISTS, doesTaskExists);
+ViewMediator.subscribe(ViewEvents.GET_TASK_COUNT, getTaskCount);
+
+// Filter tasks
+ViewMediator.subscribe(ViewEvents.FILTER_TASK_BY_TEXT, (text) => filterTasks(`Search: ${text}`, filterByText, text));
+ViewMediator.subscribe(ViewEvents.FILTER_COMPLETED_TASKS, () => filterTasks("Complete Tasks", filterComplete));
+ViewMediator.subscribe(ViewEvents.FILTER_CRITICAL_TASKS, () => filterTasks("Critical Tasks", filterCritical));
+ViewMediator.subscribe(ViewEvents.FILTER_ALL_TASKS, () => filterTasks("All Tasks", filterAll));
+ViewMediator.subscribe(ViewEvents.FILTER_TASK_TODAY, (today) => filterTasks(today, filterToday));
+ViewMediator.subscribe(ViewEvents.FILTER_BY_WEEK, (week) => filterTasks(week, filterByThisWeek));
+ViewMediator.subscribe(ViewEvents.FILTER_BY_MONTH, (month) => filterTasks(month, filterByThisMonth));
+
+function convertStringifiedProjects(stringified) {
+    const converted = stringified?.map((project) => Object.assign(new Project(), project));
+    converted?.forEach((project) => project?.tasks
         .forEach((task) => {
             if (task.dueDate) task.dueDate = new Date(task.dueDate);
         })
     );
-    return deserialized;
+    return converted;
 }
 
-const ProjectController = (() => {
-    let projects = [new Project("Inbox")];
-
-    // Loading saved projects
-    StorageMediator.subscribe(StorageEvents.GET_PROJECTS, ({ savedProjects }) => {
-        if (savedProjects?.length > 0) {
-            projects = convertStringifiedProjects(savedProjects);
-        }
-    });
-    StorageMediator.publish(StorageEvents.LOAD_PROJECTS, null);
-
-    ViewMediator.subscribe(ViewEvents.PROJECTS_AVAILABLE, () => {
-        const projectTitles = projects.filter(project => project.title !== "Inbox").map(project => project.title);
-        ViewMediator.publish(ViewEvents.PROJECTS_LOADED, { projects: projectTitles });
-    });
-
-    // CRUD projects
-    function getProject(title) {
-        return projects.find((p) => p.title === title);
+function loadStoredProjects(savedProjects) {
+    const saved = convertStringifiedProjects(savedProjects);
+    const savedInbox = saved?.find((project) => project.title === inbox.title);
+    if (saved?.length > 0 && savedInbox.getTasks().length > 0) {
+        projects = saved;
+    } else {
+        const exampleProjects = createExampleProjects();
+        projects = [...projects, ...exampleProjects];
     }
+}
 
-    ViewMediator.subscribe(ViewEvents.PROJECT_SELECTED, (title) => {
-        const project = getProject(title);
-        if (project) {
-            const tasks = project.getTasks();
-            ViewMediator.publish(ViewEvents.RENDER_PROJECT, { projectTitle: project.title, tasks });
-        }
-    });
+function passStoredProjectsToView() {
+    const projectTitles = projects.filter(project => project.title !== inbox.title).map(project => project.title);
+    ViewMediator.publish(ViewEvents.GET_PROJECTS_RESP, projectTitles);
+}
 
-    ViewMediator.subscribe(ViewEvents.CREATE_PROJECT, (title) => {
-        const projectAlreadyExists = getProject(title);
-        if (projectAlreadyExists) return;
-        const project = new Project(title);
-        projects.push(project);
-        StorageMediator.publish(StorageEvents.SAVE_PROJECTS, projects);
-    });
+function getProject(title) {
+    return projects.find((p) => p.title === title);
+}
 
-    ViewMediator.subscribe(ViewEvents.REMOVE_PROJECT, (title) => {
-        projects = projects.filter((project) => project.title !== title);
-        StorageMediator.publish(StorageEvents.UPDATE_PROJECTS, projects);
-    });
+function passProjectToView(title) {
+    const project = getProject(title);
+    if (project) {
+        const tasks = project.getTasks();
+        ViewMediator.publish(ViewEvents.GET_PROJECT_RESP, { projectTitle: project.title, tasks });
+    }
+}
 
-    ViewMediator.subscribe(ViewEvents.CREATE_TASK, ({ projectTitle, title, description, dueDate, priority }) => {
-        getProject(projectTitle)?.addTask(title, description, dueDate, priority);
-        StorageMediator.publish(StorageEvents.UPDATE_PROJECTS, projects);
-    });
+function createProject(title) {
+    const projectAlreadyExists = getProject(title);
+    if (projectAlreadyExists) return;
+    projects.push(new Project(title));
+    StorageMediator.publish(StorageEvents.SAVE_PROJECTS, projects);
+}
 
-    ViewMediator.subscribe(ViewEvents.REMOVE_TASK, ({ projectTitle, title }) => {
-        getProject(projectTitle)?.removeTask(title);
-        StorageMediator.publish(StorageEvents.UPDATE_PROJECTS, projects);
-    });
+function removeProject(title) {
+    projects = projects.filter((project) => project.title !== title);
+    StorageMediator.publish(StorageEvents.UPDATE_PROJECTS, projects);
+}
 
-    ViewMediator.subscribe(ViewEvents.EDIT_TASK, ({ projectTitle, taskToEdit, title, description, dueDate, priority, isComplete }) => {
-        getProject(projectTitle)?.editTask(taskToEdit, title, description, dueDate, priority, isComplete);
-        StorageMediator.publish(StorageEvents.UPDATE_PROJECTS, projects);
-    });
+function createTask({ projectTitle, title, description, dueDate, priority }) {
+    getProject(projectTitle)?.addTask(title, description, dueDate, priority);
+    StorageMediator.publish(StorageEvents.UPDATE_PROJECTS, projects);
+}
 
-    ViewMediator.subscribe(ViewEvents.EDIT_TASK_CLICKED, ({ projectTitle, title }) => {
-        const task = getProject(projectTitle)?.getTask(title);
-        ViewMediator.publish(ViewEvents.GET_TASK, { projectTitle, task });
-    });
+function removeTask({ projectTitle, title }) {
+    getProject(projectTitle)?.removeTask(title);
+    StorageMediator.publish(StorageEvents.UPDATE_PROJECTS, projects);
+}
 
-    ViewMediator.subscribe(ViewEvents.DOES_PROJECT_EXISTS, (projectTitle) => {
-        const projectExists = getProject(projectTitle) ? true : false;
-        ViewMediator.publish(ViewEvents.PROJECT_EXISTS, projectExists);
-    });
+function editTask({ projectTitle, taskToEdit, title, description, dueDate, priority, isComplete }) {
+    getProject(projectTitle)?.editTask(taskToEdit, title, description, dueDate, priority, isComplete);
+    StorageMediator.publish(StorageEvents.UPDATE_PROJECTS, projects);
+}
 
-    ViewMediator.subscribe(ViewEvents.DOES_TASK_EXISTS, ({ projectTitle, title }) => {
-        const taskExists = (getProject(projectTitle)?.getTask(title)) ? true : false;
-        ViewMediator.publish(ViewEvents.TASK_EXISTS, taskExists);
-    });
+function getTask({ projectTitle, title }) {
+    const task = getProject(projectTitle)?.getTask(title);
+    ViewMediator.publish(ViewEvents.GET_TASK_RESP, { projectTitle, task });
+}
 
-    ViewMediator.subscribe(ViewEvents.GET_TASK_COUNT, (project) => {
-        const count = getProject(project).tasks.length;
-        ViewMediator.publish(ViewEvents.GET_TASK_COUNT_RESP, { projectTitle: project, taskCount: count });
-    });
+function doesProjectExists(projectTitle) {
+    const projectExists = getProject(projectTitle) ? true : false;
+    ViewMediator.publish(ViewEvents.DOES_PROJECT_EXISTS_RESP, projectExists);
+}
 
-    // Task filtering
-    ViewMediator.subscribe(ViewEvents.FILTER_TASK_BY_TEXT, (text) => {
-        const tasks = filterByText(projects, text);
-        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: `Search: ${text}`, filtered: tasks });
-    });
+function doesTaskExists({ projectTitle, title }) {
+    const taskExists = (getProject(projectTitle)?.getTask(title)) ? true : false;
+    ViewMediator.publish(ViewEvents.DOES_TASK_EXISTS_RESP, taskExists);
+}
 
-    ViewMediator.subscribe(ViewEvents.FILTER_COMPLETED_TASKS, () => {
-        const tasks = filterCompleteTasks(projects);
-        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: "Complete Tasks", filtered: tasks });
-    });
+function getTaskCount(projectTitle) {
+    const count = getProject(projectTitle).tasks.length;
+    ViewMediator.publish(ViewEvents.GET_TASK_COUNT_RESP, { projectTitle, taskCount: count });
+}
 
-    ViewMediator.subscribe(ViewEvents.FILTER_CRITICAL_TASKS, () => {
-        const tasks = filterCriticalTasks(projects);
-        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: "Critical Tasks", filtered: tasks });
-    });
-
-    ViewMediator.subscribe(ViewEvents.FILTER_ALL_TASKS, () => {
-        const tasks = filterAllTasks(projects);
-        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: "All Tasks", filtered: tasks });
-    });
-
-    ViewMediator.subscribe(ViewEvents.FILTER_TASK_TODAY, (today) => {
-        const tasks = filterTasksToday(projects);
-        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: today, filtered: tasks });
-    });
-
-    ViewMediator.subscribe(ViewEvents.FILTER_BY_WEEK, (week) => {
-        const tasks = filterTasksByThisWeek(projects);
-        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: week, filtered: tasks });
-    });
-
-    ViewMediator.subscribe(ViewEvents.FILTER_BY_MONTH, (month) => {
-        const tasks = filterTasksByThisMonth(projects);
-        ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: month, filtered: tasks });
-    });
-
-})();
+function filterTasks(filterName, filter, filterArg) {
+    const result = filter(projects, filterArg);
+    ViewMediator.publish(ViewEvents.GET_FILTERED_TASKS, { filter: filterName, filtered: result });
+}

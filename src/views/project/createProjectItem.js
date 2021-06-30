@@ -11,11 +11,11 @@ function createProjectItem(title) {
 
     const $projectItem = document.createElement("div");
     $projectItem.classList.add("project-item");
-    $projectItem.addEventListener("click", () => ViewMediator.publish(ViewEvents.PROJECT_SELECTED, $name.textContent));
+    $projectItem.addEventListener("click", () => ViewMediator.publish(ViewEvents.GET_PROJECT, $name.textContent));
     $projectItem.append($name, $counter);
 
     const setActive = (title) => {
-        if (title === "Inbox" && $name.textContent === "Inbox") {
+        if (title === "Inbox") {
             const inbox = document.querySelector(".projects-inbox-btn");
             setItemActive(inbox);
             return;
@@ -32,7 +32,7 @@ function createProjectItem(title) {
         }
     }
 
-    ViewMediator.subscribe(ViewEvents.PROJECT_SELECTED, setActive);
+    ViewMediator.subscribe(ViewEvents.GET_PROJECT, setActive);
     ViewMediator.subscribe(ViewEvents.REMOVE_PROJECT, remove);
 
     return $projectItem;

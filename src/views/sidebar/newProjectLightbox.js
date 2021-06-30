@@ -28,7 +28,7 @@ import { ViewEvents, ViewMediator } from "../../mediator/viewMediator"
     })();
 
     let doesProjectExists = true;
-    ViewMediator.subscribe(ViewEvents.PROJECT_EXISTS, (projectExists) => doesProjectExists = projectExists);
+    ViewMediator.subscribe(ViewEvents.DOES_PROJECT_EXISTS_RESP, (projectExists) => doesProjectExists = projectExists);
     
     const validate = () => {
         const errors = [];

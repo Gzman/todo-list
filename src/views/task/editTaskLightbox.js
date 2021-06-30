@@ -20,7 +20,7 @@ import { format } from "date-fns";
         })
     })();
 
-    ViewMediator.subscribe(ViewEvents.GET_TASK, ({ projectTitle, task }) => {
+    ViewMediator.subscribe(ViewEvents.GET_TASK_RESP, ({ projectTitle, task }) => {
         const { title, description, dueDate, priority, isComplete } = task;
         project = projectTitle;
         taskToEdit = title;
@@ -53,7 +53,7 @@ import { format } from "date-fns";
     })();
 
     let taskAlreadyExists = true;
-    ViewMediator.subscribe(ViewEvents.TASK_EXISTS, (taskExists) => taskAlreadyExists = taskExists);
+    ViewMediator.subscribe(ViewEvents.DOES_TASK_EXISTS_RESP, (taskExists) => taskAlreadyExists = taskExists);
     const validate = () => {
         const errors = [];
         if ($name.value.length < 1) {
@@ -63,10 +63,6 @@ import { format } from "date-fns";
         ViewMediator.publish(ViewEvents.DOES_TASK_EXISTS, { projectTitle: project, title: $name.value });
         if ($name.value !== taskToEdit && taskAlreadyExists) {
             errors.push({ id: $name, message: "Task already exists." });
-        }
-
-        if ($description.value.length < 1) {
-            errors.push({ id: $description, message: "Please fill out a desscription" });
         }
 
         const now = new Date();

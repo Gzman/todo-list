@@ -18,39 +18,39 @@ const filterByText = (projects, text) => {
     });
 }
 
-const filterCompleteTasks = (projects) => {
+const filterComplete = (projects) => {
     return filterTasks(projects, (task) => task.isComplete);
 }
 
-const filterCriticalTasks = (projects) => {
+const filterCritical = (projects) => {
     return filterTasks(projects, (task) => task.priority === "High");
 }
 
-const filterAllTasks = (projects) => {
+const filterAll = (projects) => {
     return filterTasks(projects, (task) => task !== null);
 }
 
-const filterTasksToday = (projects) => {
+const filterToday = (projects) => {
     const today = new Date();
     return filterTasks(projects, (task) => task.dueDate?.getDate() === today.getDate());
 }
 
-const filterTasksByThisWeek = (projects) => {
+const filterByThisWeek = (projects) => {
     const currentWeek = getWeek(new Date());
     return filterTasks(projects, (task) => getWeek(task.dueDate) === currentWeek);
 }
 
-const filterTasksByThisMonth = (projects) => {
+const filterByThisMonth = (projects) => {
     const today = new Date();
     return filterTasks(projects, (task) => task.dueDate?.getFullYear() === today.getFullYear() && task.dueDate?.getMonth() === today.getMonth());
 }
 
 export {
     filterByText,
-    filterCompleteTasks,
-    filterCriticalTasks,
-    filterAllTasks,
-    filterTasksToday,
-    filterTasksByThisWeek,
-    filterTasksByThisMonth,
+    filterComplete,
+    filterCritical,
+    filterAll,
+    filterToday,
+    filterByThisWeek,
+    filterByThisMonth,
 }

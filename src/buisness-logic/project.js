@@ -45,10 +45,6 @@ class Project {
             task.isComplete = isComplete;
         }
     }
-
-    addTag(title, tags) {
-        findTask.call(this, title).addTags(tags);
-    }
 }
 
 export { Project };

@@ -6,9 +6,9 @@ const Storage = (() => {
 
     StorageMediator.subscribe(StorageEvents.UPDATE_PROJECTS, (projects) => update(projects));
 
-    StorageMediator.subscribe(StorageEvents.LOAD_PROJECTS, () => {
+    StorageMediator.subscribe(StorageEvents.GET_STORED_PROJECTS, () => {
         const projects = load();
-        StorageMediator.publish(StorageEvents.GET_PROJECTS, { savedProjects: projects });
+        StorageMediator.publish(StorageEvents.GET_STORED_PROJECTS_RESP, projects);
     });
 
 })();

@@ -12,15 +12,19 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
   $isComplete.type = "checkbox";
   $isComplete.classList.add("task-item-complete");
   $isComplete.checked = isComplete;
-  $isComplete.addEventListener("change", (event) => ViewMediator.publish(ViewEvents.EDIT_TASK, {
-    projectTitle: $taskItem.dataset.project,
-    taskToEdit: $taskItem.dataset.task,
-    title: $taskItem.dataset.task,
-    description: $description.textContent,
-    priority: extractPriority($taskItem),
-    dueDate: ($dueDate.value) ? new Date($dueDate.value) : null,
-    isComplete: event.currentTarget.checked
-  }));
+  if (isComplete) $taskItem.classList.add("itemComplete");
+  $isComplete.addEventListener("change", (event) => {
+    $taskItem.classList.toggle("itemComplete");
+    ViewMediator.publish(ViewEvents.EDIT_TASK, {
+      projectTitle: $taskItem.dataset.project,
+      taskToEdit: $taskItem.dataset.task,
+      title: $taskItem.dataset.task,
+      description: $description.textContent,
+      priority: extractPriority($taskItem),
+      dueDate: ($dueDate.value) ? new Date($dueDate.value) : null,
+      isComplete: event.currentTarget.checked
+    });
+  });
 
   const $name = document.createElement("p");
   $name.classList.add("task-item-name");
@@ -43,7 +47,7 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
   $editBtn.textContent = "Edit";
   $editBtn.addEventListener("click", () => {
     document.querySelector(".edit-task-container").classList.add("showItem");
-    ViewMediator.publish(ViewEvents.EDIT_TASK_CLICKED, { projectTitle: $taskItem.dataset.project, title: $taskItem.dataset.task });
+    ViewMediator.publish(ViewEvents.GET_TASK, { projectTitle: $taskItem.dataset.project, title: $taskItem.dataset.task });
   });
 
   const $controlls = document.createElement("div");
@@ -65,7 +69,9 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
   const $detailView = document.createElement("div");
   $detailView.classList.add("task-item-detail-view", "hideItem");
   $detailView.append($description);
-  $name.addEventListener("click", () => $detailView.classList.toggle("hideItem"));
+  $name.addEventListener("click", () => {
+    if ($description.textContent !== "") $detailView.classList.toggle("hideItem")
+  });
 
   $taskItem.append($normalView, $detailView);
 

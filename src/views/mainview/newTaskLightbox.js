@@ -51,10 +51,6 @@ import { taskPriorities } from "../task/taskPriorities"
             errors.push({ id: $name, message: "Task already exists." });
         }
 
-        if ($description.value.length < 1) {
-            errors.push({ id: $description, message: "Please fill out a desscription" });
-        }
-
         const now = new Date();
         now.setHours(0);
         const dueDate = new Date($dueDate.value);

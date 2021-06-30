@@ -11,7 +11,7 @@ import { format } from "date-fns"
 
     $inboxBtn.addEventListener("click", (event) => {
         setItemActive(event.currentTarget);
-        ViewMediator.publish(ViewEvents.PROJECT_SELECTED, $inboxBtn.textContent)
+        ViewMediator.publish(ViewEvents.GET_PROJECT, $inboxBtn.textContent)
     });
     $todayBtn.addEventListener("click", (event) => {
         setItemActive(event.currentTarget);
@@ -33,16 +33,17 @@ import { format } from "date-fns"
     const $projectAddBtn = document.querySelector(".projects-add-btn");
     const $newProjectLightbox = document.querySelector(".new-project-container");
 
-    ViewMediator.subscribe(ViewEvents.PROJECTS_LOADED, ({ projects }) => {
+    ViewMediator.subscribe(ViewEvents.GET_PROJECTS_RESP, (projects) => {
         projects
             .map(project => createProjectItem(project))
             .forEach(item => $projectItems.appendChild(item));
     });
-    ViewMediator.publish(ViewEvents.PROJECTS_AVAILABLE, null);
+    ViewMediator.publish(ViewEvents.GET_PROJECTS, null);
 
     ViewMediator.subscribe(ViewEvents.CREATE_PROJECT, (title) => {
         const $project = createProjectItem(title);
         $projectItems.append($project);
+        ViewMediator.publish(ViewEvents.GET_PROJECT, title);
     });
 
     $projectAddBtn.addEventListener("click", () => {
