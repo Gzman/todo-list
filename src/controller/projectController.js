@@ -1,7 +1,7 @@
 import { ViewEvents, ViewMediator } from "../mediator/viewMediator"
 import { StorageEvents, StorageMediator } from "../mediator/storageMediator"
 import { Project } from "../buisness-logic/project"
-import { createExampleProjects } from "./exampleProject"
+import { createExampleProjects } from "./createExampleProjects"
 import { filterByText, filterCritical, filterComplete, filterAll, filterToday, filterByThisWeek, filterByThisMonth } from "./taskFilter"
 
 const inbox = new Project("Inbox");
