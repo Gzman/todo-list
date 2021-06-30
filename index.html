@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ToDo App</title>
+    <link rel="stylesheet" href="./style.css" />
+  <script defer src="main.js"></script></head>
+  <body>
+    <header>
+      <h1 class="logo">Todo List</h1>
+      <div class="global-filter">
+        <input type="text" id="global-filter-text" placeholder="Search Tasks" />
+        <button class="filter-btn" id="global-filter-critical">Critical</button>
+        <button class="filter-btn" id="global-filter-projects">
+          Completed
+        </button>
+        <button class="filter-btn" id="global-filter-all">All</button>
+      </div>
+    </header>
+    <main>
+      <div class="project-list-view">
+        <div class="projects-filter">
+          <button class="projects-inbox-btn">Inbox</button>
+          <button class="projects-today-btn">Today</button>
+          <button class="projects-week-btn">Week</button>
+          <button class="projects-month-btn">Month</button>
+        </div>
+        <div class="projects-user-created">
+          <p class="projects-label">Projects</p>
+          <div class="projects-items"></div>
+          <button class="projects-add-btn">Add Project</button>
+        </div>
+      </div>
+      <div class="main-view">
+        <div class="main-view-content"></div>
+      </div>
+    </main>
+
+    <!-- New Project lightbox-->
+    <div class="new-project-container">
+      <div class="new-project-lightbox">
+        <h2 class="new-project-title">New Project</h2>
+        <div class="new-project-feedback"></div>
+        <form id="new-project-form">
+          <div>
+            <label for="new-project-name">Name</label>
+            <input id="new-project-name" type="text" />
+          </div>
+          <div class="new-project-btn">
+            <button class="new-project-cancel-btn cancel-btn">Cancel</button>
+            <button class="new-project-create-btn ok-btn">
+              Create Project
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- New Task lightbox-->
+    <div class="new-task-container">
+      <div class="new-task-lightbox">
+        <h2 class="new-task-title">New Task</h2>
+        <div class="task-feedback"></div>
+        <form id="task-form">
+          <div>
+            <label for="task-name-input">Name</label>
+            <input id="task-name-input" type="text" placeholder="Task name" />
+          </div>
+          <div>
+            <label for="task-description-input">Description</label>
+            <input
+              id="task-description-input"
+              type="text"
+              placeholder="Description of task"
+            />
+          </div>
+          <div>
+            <label for="task-date-input">Due Date</label>
+            <input id="task-date-input" type="date" />
+          </div>
+          <div>
+            <label for="task-priority-select">Priority</label>
+            <select id="task-priority-select"></select>
+          </div>
+          <div class="new-task-btn">
+            <button class="new-task-cancel-btn cancel-btn">Cancel</button>
+            <button class="new-task-create-btn ok-btn">Create Task</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Edit Task lightbox-->
+    <div class="edit-task-container">
+      <div class="edit-task-lightbox">
+        <h2 class="edit-task-name">Current Task</h2>
+        <div class="edit-task-feedback"></div>
+        <form id="edit-task-form">
+          <div>
+            <label for="edit-task-name-input">Name</label>
+            <input
+              id="edit-task-name-input"
+              type="text"
+              placeholder="Task name"
+            />
+          </div>
+          <div>
+            <label for="edit-task-description-input">Description</label>
+            <input
+              id="edit-task-description-input"
+              rows="5"
+              type="text"
+              placeholder="Description of task"
+            />
+          </div>
+          <div>
+            <label for="edit-task-date-input">Due Date</label>
+            <input id="edit-task-date-input" type="date" />
+          </div>
+          <div>
+            <label for="edit-task-priority-select">Priority</label>
+            <select id="edit-task-priority-select"></select>
+          </div>
+          <div class="edit-task-btn">
+            <button class="edit-task-cancel-btn cancel-btn">Cancel</button>
+            <button class="edit-task-save-btn ok-btn">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
