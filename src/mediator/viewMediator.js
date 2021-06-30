@@ -1,8 +1,8 @@
 import { PubSub } from "./pubsub.js"
 
 const ViewEvents = {
-    GET_PROJECTS_RESP: "GetProjectsResponse",
     GET_PROJECTS: "GetProjects",
+    GET_PROJECTS_RESP: "GetProjectsResponse",
 
     GET_PROJECT: "GetProject",
     GET_PROJECT_RESP: "GetProjectResponse",
@@ -19,8 +19,8 @@ const ViewEvents = {
     EDIT_TASK: "EditTask",
 
     DOES_PROJECT_EXISTS: "DoesProjectExists",
-    DOES_TASK_EXISTS: "DoesTaskExists",
     DOES_PROJECT_EXISTS_RESP: "DoesProjectExistsResponse",
+    DOES_TASK_EXISTS: "DoesTaskExists",
     DOES_TASK_EXISTS_RESP: "DoesTaskExistsResponse",
 
     GET_FILTERED_TASKS: "GetFilteredTasks",
