@@ -1,12 +1,3 @@
-/* Simple Css reset */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
 :root {
   --font-color: rgb(55, 55, 55);
   --font-color-light: rgb(122, 122, 122);
@@ -15,7 +6,18 @@
   --background-color: rgb(250, 250, 250);
   --accent-color: rgb(166, 166, 166);
   --highlight-color: rgb(222, 222, 222);
-  --side-bar-width: 20%;
+  --side-bar-width: 260px;
+}
+
+/* Simple Css reset */
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 html {
@@ -25,7 +27,6 @@ html {
 }
 
 body {
-  width: 100vw;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -36,7 +37,6 @@ h2 {
 }
 
 header {
-  height: 10vh;
   padding: 1rem;
   display: flex;
   align-items: center;
@@ -54,12 +54,13 @@ header {
   gap: 1rem;
 }
 
-.global-filter > * {
+.filter-btns > * {
   padding: 0.5rem;
 }
 
 #global-filter-text {
-  width: 25vw;
+  width: auto;
+  padding: 0.5rem;
 }
 
 main {
@@ -74,11 +75,22 @@ main {
   flex-direction: column;
 }
 
+.project-list-view-btn {
+  display: none;
+  padding: 0.75rem;
+}
+
 .project-list-view {
+  position: relative;
   width: var(--side-bar-width);
   padding: 1rem;
   height: 100%;
   background-color: var(--secondary-color);
+}
+
+.showProjectListView {
+  display: flex !important;
+  z-index: 5;
 }
 
 .projects-filter {
@@ -208,10 +220,6 @@ main {
   overflow-wrap: break-word;
 }
 
-/*.task-item-description { // Not working
-  overflow-wrap: break-word;
-}*/
-
 .task-item:hover {
   background-color: var(--highlight-color);
 }
@@ -222,7 +230,8 @@ main {
 
 .task-item-normal-view {
   display: grid;
-  grid-template-columns: max-content auto max-content max-content;
+  grid-template-columns: max-content 1fr max-content max-content;
+  align-items: center;
   gap: 0.5rem;
 }
 
@@ -235,6 +244,11 @@ main {
 .task-item-controlls {
   display: flex;
   gap: 0.5rem;
+}
+
+.task-item-delete,
+.task-item-edit {
+  padding: 0.25rem;
 }
 
 .task-item-detail-view {
@@ -270,6 +284,7 @@ main {
   display: flex;
   flex-direction: column;
   border-radius: 0.3rem;
+  box-shadow: 0.25rem 0.25rem 0.5rem var(--font-color-light);
 }
 
 .new-project-feedback,
@@ -371,5 +386,105 @@ main {
   }
   100% {
     opacity: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+  header {
+    flex-direction: column;
+  }
+  main {
+    flex-direction: column;
+  }
+  .logo {
+    width: auto;
+  }
+  .projects-filter > button,
+  .project-item {
+    padding: 0.75rem;
+  }
+  .project-list-view {
+    display: none;
+    width: auto;
+    animation: fadeIn 0.1s ease-in;
+  }
+  .project-list-view-btn {
+    display: block;
+  }
+  .main-view {
+    width: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .logo {
+    font-size: 1.5rem;
+  }
+  html {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 450px) {
+  .header {
+    padding: 1.5rem;
+  }
+  .logo {
+    display: none;
+  }
+  .global-filter {
+    flex-direction: column;
+    align-items: center;
+  }
+  .task-item-normal-view {
+    grid-template-columns: max-content 1fr max-content;
+    justify-content: start;
+  }
+  .task-item-controlls {
+    justify-self: end;
+  }
+  .task-item-date {
+    justify-self: end;
+    grid-column: span 3;
+    font-size: 0.9rem;
+  }
+  .current-project-controlls > * {
+    padding: 0.25rem;
+  }
+  #new-project-form > div,
+  #task-form > div,
+  #edit-task-form > div {
+    grid-template-columns: auto;
+  }
+  #new-project-form .new-project-btn,
+  #task-form .new-task-btn,
+  #edit-task-form .edit-task-btn {
+    display: flex;
+    justify-content: flex-end;
+    justify-items: flex-end;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 319px) {
+  .task-item-normal-view {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .current-project-controlls {
+    flex-direction: column;
+  }
+  .task-item-name {
+    padding: 0.5rem 0 0.5rem 0;
   }
 }

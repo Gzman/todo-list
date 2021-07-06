@@ -12,14 +12,19 @@
       <h1 class="logo">Todo List</h1>
       <div class="global-filter">
         <input type="text" id="global-filter-text" placeholder="Search Tasks" />
-        <button class="filter-btn" id="global-filter-critical">Critical</button>
-        <button class="filter-btn" id="global-filter-projects">
-          Completed
-        </button>
-        <button class="filter-btn" id="global-filter-all">All</button>
+        <div class="filter-btns">
+          <button class="filter-btn" id="global-filter-critical">
+            Critical
+          </button>
+          <button class="filter-btn" id="global-filter-projects">
+            Completed
+          </button>
+          <button class="filter-btn" id="global-filter-all">All</button>
+        </div>
       </div>
     </header>
     <main>
+      <button class="project-list-view-btn">Project Menu</button>
       <div class="project-list-view">
         <div class="projects-filter">
           <button class="projects-inbox-btn">Inbox</button>
@@ -46,7 +51,13 @@
         <form id="new-project-form">
           <div>
             <label for="new-project-name">Name</label>
-            <input id="new-project-name" type="text" />
+            <input
+              id="new-project-name"
+              type="text"
+              required
+              minlength="1"
+              maxlength="40"
+            />
           </div>
           <div class="new-project-btn">
             <button class="new-project-cancel-btn cancel-btn">Cancel</button>
@@ -66,7 +77,14 @@
         <form id="task-form">
           <div>
             <label for="task-name-input">Name</label>
-            <input id="task-name-input" type="text" placeholder="Task name" />
+            <input
+              id="task-name-input"
+              type="text"
+              placeholder="Task name"
+              required
+              minlength="1"
+              maxlength="40"
+            />
           </div>
           <div>
             <label for="task-description-input">Description</label>
@@ -74,6 +92,7 @@
               id="task-description-input"
               type="text"
               placeholder="Description of task"
+              maxlength="70"
             />
           </div>
           <div>
@@ -130,3 +149,5 @@
         </form>
       </div>
     </div>
+  </body>
+</html>
