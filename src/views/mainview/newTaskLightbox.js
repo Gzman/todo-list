@@ -2,7 +2,8 @@ import { ViewEvents, ViewMediator } from "../../mediator/viewMediator"
 import { taskPriorities } from "../task/taskPriorities"
 
 (function NewTaskLightbox() {
-    const $form = document.querySelector("#task-form");
+    const $newTask = document.querySelector(".new-task-lightbox");
+    const $form = $newTask.querySelector("#task-form");
     const $name = $form.querySelector("#task-name-input");
     const $description = $form.querySelector("#task-description-input");
     const $dueDate = $form.querySelector("#task-date-input");
@@ -60,14 +61,15 @@ import { taskPriorities } from "../task/taskPriorities"
         return errors;
     }
 
-    const close = () => {
+    const close = (event) => {
+        event?.preventDefault();
         $form.reset();
         Feedback.reset();
         document.querySelector(".new-task-container").classList.remove("showItem");
     }
 
-    $createBtn.addEventListener("click", (event) => {
-        event.preventDefault();
+    const submit = (event) => {
+        event?.preventDefault();
         const errors = validate();
         if (errors.length === 0) {
             const projectTitle = document.querySelector(".current-project-name")?.textContent;
@@ -82,11 +84,15 @@ import { taskPriorities } from "../task/taskPriorities"
         } else {
             Feedback.render(errors);
         }
-    });
+    }
 
-    $cancelBtn.addEventListener("click", (event) => {
-        event.preventDefault();
-        close();
-    });
+    $createBtn.addEventListener("click", submit);
+
+    $cancelBtn.addEventListener("click", close);
+
+    $newTask.addEventListener("keypress", (event) => {
+        if (event.key === "Enter") submit(event);
+        if (event.key === "Escape") close(event);
+    })
 
 })();

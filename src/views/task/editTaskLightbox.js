@@ -4,7 +4,8 @@ import { DATE_FORMAT } from "../util";
 import { format } from "date-fns";
 
 (function EditTaskLightbox() {
-    const $form = document.querySelector("#edit-task-form");
+    const $editTask = document.querySelector(".edit-task-lightbox");
+    const $form = $editTask.querySelector("#edit-task-form");
     const $name = $form.querySelector("#edit-task-name-input");
     const $description = $form.querySelector("#edit-task-description-input");
     const $dueDate = $form.querySelector("#edit-task-date-input");
@@ -75,15 +76,15 @@ import { format } from "date-fns";
         return errors;
     }
 
-    const close = () => {
+    const close = (event) => {
+        event?.preventDefault();
         $form.reset();
         Feedback.reset();
         document.querySelector(".edit-task-container").classList.remove("showItem");
     }
 
-    const $saveBtn = $form.querySelector(".edit-task-save-btn");
-    $saveBtn.addEventListener("click", (event) => {
-        event.preventDefault();
+    const submit = (event) => {
+        event?.preventDefault();
         const errors = validate();
         if (errors.length === 0) {
             ViewMediator.publish(ViewEvents.EDIT_TASK, {
@@ -99,12 +100,17 @@ import { format } from "date-fns";
         } else {
             Feedback.render(errors);
         }
-    });
+    }
+
+    const $saveBtn = $form.querySelector(".edit-task-save-btn");
+    $saveBtn.addEventListener("click", submit);
 
     const $cancelBtn = $form.querySelector(".edit-task-cancel-btn");
-    $cancelBtn.addEventListener("click", (event) => {
-        event.preventDefault();
-        close();
+    $cancelBtn.addEventListener("click", close);
+
+    $editTask.addEventListener("keypress", (event) => {
+        if (event.key === "Enter") submit(event);
+        if (event.key === "Escape") close(event);
     });
 
 })();

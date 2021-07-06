@@ -1,7 +1,8 @@
 import { ViewEvents, ViewMediator } from "../../mediator/viewMediator"
 
 (function NewProjectLightbox() {
-    const $form = document.querySelector("#new-project-form");
+    const $newProject = document.querySelector(".new-project-lightbox");
+    const $form = $newProject.querySelector("#new-project-form");
     const $name = $form.querySelector("#new-project-name");
     const $createBtn = $form.querySelector(".new-project-create-btn");
     const $cancelBtn = $form.querySelector(".new-project-cancel-btn");
@@ -29,7 +30,7 @@ import { ViewEvents, ViewMediator } from "../../mediator/viewMediator"
 
     let doesProjectExists = true;
     ViewMediator.subscribe(ViewEvents.DOES_PROJECT_EXISTS_RESP, (projectExists) => doesProjectExists = projectExists);
-    
+
     const validate = () => {
         const errors = [];
         if ($name.value.length < 1) {
@@ -44,14 +45,15 @@ import { ViewEvents, ViewMediator } from "../../mediator/viewMediator"
         return errors;
     }
 
-    const close = () => {
+    const close = (event) => {
+        event?.preventDefault();
         $form.reset();
         Feedback.reset();
         document.querySelector(".new-project-container").classList.remove("showItem");
     }
 
-    $createBtn.addEventListener("click", (event) => {
-        event.preventDefault();
+    const submit = (event) => {
+        event?.preventDefault();
         const errors = validate();
         if (errors.length === 0) {
             ViewMediator.publish(ViewEvents.CREATE_PROJECT, $name.value);
@@ -59,10 +61,15 @@ import { ViewEvents, ViewMediator } from "../../mediator/viewMediator"
         } else {
             Feedback.render(errors);
         }
+    }
+
+    $createBtn.addEventListener("click", submit);
+
+    $cancelBtn.addEventListener("click", close);
+
+    $newProject.addEventListener("keypress", (event) => {
+        if (event.key === "Enter") submit(event);
+        if (event.key === "Escape") close(event);
     });
 
-    $cancelBtn.addEventListener("click", (event) => {
-        event.preventDefault();
-        close();
-    });
 })();
