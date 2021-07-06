@@ -51,3 +51,24 @@ import { format } from "date-fns"
     });
 
 })();
+
+(function ProjectListViewResponsiveMenu() {
+    const $projectListView = document.querySelector(".project-list-view");
+    const $projectListViewBtn = document.querySelector(".project-list-view-btn");
+    const $globalFilter = document.querySelector(".global-filter");
+
+    $projectListViewBtn.addEventListener("click", () => {
+        $projectListView.classList.toggle("showProjectListView");
+    });
+
+    $projectListView.addEventListener("click", () => {
+        if ($projectListView.classList.contains("showProjectListView")) {
+            $projectListView.classList.remove("showProjectListView");
+        }
+    });
+
+    $globalFilter.addEventListener("click", () => {
+        $projectListView.classList.remove("showProjectListView");
+    });
+
+})();

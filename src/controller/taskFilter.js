@@ -32,7 +32,11 @@ const filterAll = (projects) => {
 
 const filterToday = (projects) => {
     const today = new Date();
-    return filterTasks(projects, (task) => task.dueDate?.getDate() === today.getDate());
+    return filterTasks(projects, (task) =>
+        today.getFullYear() === task.dueDate?.getFullYear()
+        && today.getMonth() === task.dueDate?.getMonth()
+        && today.getDate() === task.dueDate?.getDate()
+    );
 }
 
 const filterByThisWeek = (projects) => {

@@ -1,5 +1,6 @@
 import { ViewEvents, ViewMediator } from "../../mediator/viewMediator"
 import { taskPriorities } from "./taskPriorities"
+import { DATE_FORMAT } from "../util";
 import { format } from "date-fns";
 
 (function EditTaskLightbox() {
@@ -26,7 +27,7 @@ import { format } from "date-fns";
         taskToEdit = title;
         $name.value = title;
         $description.value = description;
-        if (dueDate) $dueDate.value = format(dueDate, "yyyy-MM-dd");
+        if (dueDate) $dueDate.value = format(dueDate, DATE_FORMAT);
         $priority.value = priority;
         taskToEditComplete = isComplete;
     });

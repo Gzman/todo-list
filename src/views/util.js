@@ -4,4 +4,6 @@ const setItemActive = ($item) => {
     $item?.classList.add("activeItem");
 }
 
-export { setItemActive }
+const DATE_FORMAT = "yyyy-MM-dd";
+
+export { setItemActive, DATE_FORMAT }

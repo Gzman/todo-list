@@ -11,3 +11,5 @@ import {} from "./views/mainview/currentFilterView"
 // Show all tasks on startup
 import { ViewEvents, ViewMediator } from "./mediator/viewMediator"
 ViewMediator.publish(ViewEvents.FILTER_ALL_TASKS, null);
+
+

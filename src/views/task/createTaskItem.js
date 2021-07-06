@@ -1,5 +1,6 @@
 import { ViewEvents, ViewMediator } from "../../mediator/viewMediator";
 import { taskPriorities } from "./taskPriorities";
+import { DATE_FORMAT } from "../util";
 import { format } from "date-fns";
 
 function createTaskItem(projectTitle, { title, description, priority, dueDate, isComplete }) {
@@ -59,7 +60,7 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
   const $dueDate = document.createElement("input");
   $dueDate.classList.add("task-item-date");
   $dueDate.type = "date";
-  if (dueDate) $dueDate.value = format(dueDate, "yyyy-MM-dd");
+  if (dueDate) $dueDate.value = format(dueDate, DATE_FORMAT);
   $dueDate.readOnly = true;
 
   const $normalView = document.createElement("div");
@@ -91,7 +92,7 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
       $taskItem.classList.add(`priority-${priority}`);
     }
     if (dueDate) {
-      $dueDate.value = format(dueDate, "yyyy-MM-dd");
+      $dueDate.value = format(dueDate, DATE_FORMAT);
     }
   });
 
