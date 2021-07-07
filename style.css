@@ -259,6 +259,12 @@ main {
   cursor: pointer;
 }
 
+.task-item-date {
+  padding: 0.25rem;
+  background-color: var(--background-color);
+  color: var(--font-color-light);
+}
+
 .task-item-normal-view {
   display: grid;
   grid-template-columns: max-content 1fr max-content max-content;
@@ -481,13 +487,20 @@ main {
     grid-template-columns: max-content 1fr max-content;
     justify-content: start;
   }
-  .task-item-controlls {
+  .task-item-date {
+    justify-self: end;
+  }
+  /* .task-item-controlls {
     justify-self: end;
   }
   .task-item-date {
     justify-self: end;
     grid-column: span 3;
     font-size: 0.9rem;
+  } */
+  .task-item-controlls {
+    justify-self: end;
+    grid-column: span 3;
   }
   .current-project-controlls > * {
     padding: 0.25rem;
