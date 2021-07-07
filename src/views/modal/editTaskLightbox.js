@@ -1,5 +1,7 @@
 import { ViewEvents, ViewMediator } from "../../mediator/viewMediator"
-import { taskPriorities } from "./taskPriorities"
+import { isNameSet, doesEditedTaskExists, isValidDate } from "./validator"
+import { initPrioritySelet } from "./initPrioritySelect"
+import { initFeedback } from "./initFeedback";
 import { DATE_FORMAT } from "../util";
 import { format } from "date-fns";
 
@@ -10,21 +12,17 @@ import { format } from "date-fns";
     const $description = $form.querySelector("#edit-task-description-input");
     const $dueDate = $form.querySelector("#edit-task-date-input");
     const $priority = $form.querySelector("#edit-task-priority-select");
-    let project = "";
+    const $saveBtn = $form.querySelector(".edit-task-save-btn");
+    const $cancelBtn = $form.querySelector(".edit-task-cancel-btn");
+    let currentProject = "";
     let taskToEdit = "";
     let taskToEditComplete = false;
 
-    const initPrioritySelet = (() => {
-        taskPriorities.forEach((priority) => {
-            const $option = document.createElement("option");
-            $option.text = priority;
-            $priority.add($option);
-        })
-    })();
-
+    initPrioritySelet($priority.id);
+    const feedback = initFeedback(".edit-task-feedback");
     ViewMediator.subscribe(ViewEvents.GET_TASK_RESP, ({ projectTitle, task }) => {
         const { title, description, dueDate, priority, isComplete } = task;
-        project = projectTitle;
+        currentProject = projectTitle;
         taskToEdit = title;
         $name.value = title;
         $description.value = description;
@@ -33,53 +31,18 @@ import { format } from "date-fns";
         taskToEditComplete = isComplete;
     });
 
-    const Feedback = (() => {
-        const $feedback = document.querySelector(".edit-task-feedback");
-
-        const reset = () => {
-            $feedback.classList.remove("showItem");
-            $feedback.textContent = "";
-        }
-
-        const render = (errors) => {
-            reset();
-            errors.forEach(error => {
-                const $error = document.createElement("p");
-                $error.textContent = error.message;
-                $feedback.append($error);
-            });
-            $feedback.classList.add("showItem");
-        }
-
-        return { render, reset }
-    })();
-
-    let taskAlreadyExists = true;
-    ViewMediator.subscribe(ViewEvents.DOES_TASK_EXISTS_RESP, (taskExists) => taskAlreadyExists = taskExists);
     const validate = () => {
-        const errors = [];
-        if ($name.value.length < 1) {
-            errors.push({ id: $name, message: "Name must be set." });
-        }
-
-        ViewMediator.publish(ViewEvents.DOES_TASK_EXISTS, { projectTitle: project, title: $name.value });
-        if ($name.value !== taskToEdit && taskAlreadyExists) {
-            errors.push({ id: $name, message: "Task already exists." });
-        }
-
-        const now = new Date();
-        now.setHours(0);
-        const dueDate = new Date($dueDate.value);
-        if (dueDate < now) {
-            errors.push({ id: $dueDate, message: "Date can't be in the past." });
-        }
-        return errors;
+        return [
+            isNameSet($name.value),
+            doesEditedTaskExists(currentProject, taskToEdit, $name.value),
+            isValidDate($dueDate.value),
+        ].filter((error) => error !== null);
     }
 
     const close = (event) => {
         event?.preventDefault();
         $form.reset();
-        Feedback.reset();
+        feedback.reset();
         document.querySelector(".edit-task-container").classList.remove("showItem");
     }
 
@@ -88,7 +51,7 @@ import { format } from "date-fns";
         const errors = validate();
         if (errors.length === 0) {
             ViewMediator.publish(ViewEvents.EDIT_TASK, {
-                projectTitle: project,
+                projectTitle: currentProject,
                 taskToEdit,
                 title: $name.value,
                 description: $description.value,
@@ -98,14 +61,12 @@ import { format } from "date-fns";
             });
             close();
         } else {
-            Feedback.render(errors);
+            feedback.render(errors);
         }
     }
 
-    const $saveBtn = $form.querySelector(".edit-task-save-btn");
-    $saveBtn.addEventListener("click", submit);
 
-    const $cancelBtn = $form.querySelector(".edit-task-cancel-btn");
+    $saveBtn.addEventListener("click", submit);
     $cancelBtn.addEventListener("click", close);
 
     $editTask.addEventListener("keypress", (event) => {

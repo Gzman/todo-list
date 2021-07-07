@@ -1,4 +1,6 @@
 import { ViewEvents, ViewMediator } from "../../mediator/viewMediator"
+import { isNameSet, doesNewProjectExists } from "./validator"
+import { initFeedback } from "./initFeedback"
 
 (function NewProjectLightbox() {
     const $newProject = document.querySelector(".new-project-lightbox");
@@ -7,48 +9,19 @@ import { ViewEvents, ViewMediator } from "../../mediator/viewMediator"
     const $createBtn = $form.querySelector(".new-project-create-btn");
     const $cancelBtn = $form.querySelector(".new-project-cancel-btn");
 
-    const Feedback = (() => {
-        const $feedback = document.querySelector(".new-project-feedback");
-
-        const reset = () => {
-            $feedback.classList.remove("showItem");
-            $feedback.textContent = "";
-        }
-
-        const render = (errors) => {
-            reset();
-            errors.forEach((error) => {
-                const $error = document.createElement("p");
-                $error.textContent = error.message;
-                $feedback.append($error);
-            });
-            $feedback.classList.add("showItem");
-        }
-
-        return { render, reset }
-    })();
-
-    let doesProjectExists = true;
-    ViewMediator.subscribe(ViewEvents.DOES_PROJECT_EXISTS_RESP, (projectExists) => doesProjectExists = projectExists);
+    const feedback = initFeedback(".new-project-feedback");
 
     const validate = () => {
-        const errors = [];
-        if ($name.value.length < 1) {
-            errors.push({ id: $name, message: "Please fill out name" });
-        }
-
-        ViewMediator.publish(ViewEvents.DOES_PROJECT_EXISTS, $name.value);
-        if (doesProjectExists) {
-            errors.push({ id: $name, message: "Project already exists." });
-        }
-
-        return errors;
+        return [
+            isNameSet($name.value),
+            doesNewProjectExists($name.value),
+        ].filter((error) => error !== null);
     }
 
     const close = (event) => {
         event?.preventDefault();
         $form.reset();
-        Feedback.reset();
+        feedback.reset();
         document.querySelector(".new-project-container").classList.remove("showItem");
     }
 
@@ -59,12 +32,11 @@ import { ViewEvents, ViewMediator } from "../../mediator/viewMediator"
             ViewMediator.publish(ViewEvents.CREATE_PROJECT, $name.value);
             close();
         } else {
-            Feedback.render(errors);
+            feedback.render(errors);
         }
     }
 
     $createBtn.addEventListener("click", submit);
-
     $cancelBtn.addEventListener("click", close);
 
     $newProject.addEventListener("keypress", (event) => {

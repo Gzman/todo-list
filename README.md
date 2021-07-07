@@ -1,6 +1,6 @@
 # todo-list
 
-A Todo-App where you can create tasks, filter them and organize them in projects - it is the ninth assignment of "The Odin Project".
+A [Todo-App](https://gzman.github.io/todo-list/) where you can create tasks, filter them and organize them in projects - it is the ninth assignment of "The Odin Project".
 
 # Features
 - Create, edit and remove tasks
