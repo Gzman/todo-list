@@ -1,4 +1,6 @@
 import { getPriorityWeight, taskPriorities } from "../task/taskPriorities"
+import { DATE_FORMAT } from "../util";
+import { parse } from "date-fns";
 
 function createSortSelect($ProjectView) {
     const $taskItems = $ProjectView.querySelector(".current-project-task-items");
@@ -19,8 +21,10 @@ function createSortSelect($ProjectView) {
 
     const sortAfterDate = (a, b) => {
         const isValidDate = (dueDate) => !isNaN(dueDate.getTime());
-        const aDate = new Date(a.querySelector(".task-item-date")?.value);
-        const bDate = new Date(b.querySelector(".task-item-date")?.value);
+        const aFormatted = a.querySelector(".task-item-date")?.textContent;
+        const bFormatted = b.querySelector(".task-item-date")?.textContent;
+        const aDate = parse(aFormatted, DATE_FORMAT, new Date());
+        const bDate = parse(bFormatted, DATE_FORMAT, new Date());
         if (!isValidDate(aDate)) return 1;
         if (!isValidDate(bDate)) return -1;
         return aDate - bDate;

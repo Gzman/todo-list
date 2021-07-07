@@ -35,6 +35,10 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
   $description.classList.add("task-item-description");
   $description.textContent = description;
 
+  const $dueDate = document.createElement("p");
+  $dueDate.classList.add("task-item-date");
+  if (dueDate) $dueDate.textContent = format(dueDate, DATE_FORMAT);
+
   const $removeBtn = document.createElement("button");
   $removeBtn.classList.add("task-item-delete");
   $removeBtn.textContent = "Delete";
@@ -57,15 +61,9 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
 
   $taskItem.classList.add(`priority-${priority}`);
 
-  const $dueDate = document.createElement("input");
-  $dueDate.classList.add("task-item-date");
-  $dueDate.type = "date";
-  if (dueDate) $dueDate.value = format(dueDate, DATE_FORMAT);
-  $dueDate.readOnly = true;
-
   const $normalView = document.createElement("div");
   $normalView.classList.add("task-item-normal-view");
-  $normalView.append($isComplete, $name, $controlls, $dueDate);
+  $normalView.append($isComplete, $name, $dueDate, $controlls);
 
   const $detailView = document.createElement("div");
   $detailView.classList.add("task-item-detail-view", "hideItem");
@@ -92,7 +90,7 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
       $taskItem.classList.add(`priority-${priority}`);
     }
     if (dueDate) {
-      $dueDate.value = format(dueDate, DATE_FORMAT);
+      $dueDate.textContent = format(dueDate, DATE_FORMAT);
     }
   });
 
