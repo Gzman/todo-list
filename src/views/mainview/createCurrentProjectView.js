@@ -10,7 +10,7 @@ function createProjectView(projectTitle, tasks) {
     <div class="current-project-controlls">
       <button class="current-project-create-btn">Create Task</button>
       <button class="current-project-delete-btn">Delete Project</button>
-      <button class="current-project-completed-btn filter-btn">
+      <button class="current-project-completed-btn">
         Completed Tasks
       </button>
       <select class="current-project-sort"></select>
