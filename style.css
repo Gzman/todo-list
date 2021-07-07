@@ -19,7 +19,7 @@
   padding: 0;
   margin: 0;
 
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 
 html {
@@ -38,6 +38,26 @@ h2 {
   font-size: 1.15rem;
 }
 
+button {
+  padding: 0.5rem;
+  background-color: transparent;
+  border: 0.175rem solid var(--font-color-light);
+  border-radius: 0.33rem;
+  cursor: pointer;
+}
+
+button:active {
+  animation: shrink 0.2s ease-in;
+}
+
+button:hover {
+  background-color: var(--highlight-color);
+}
+
+.ok-btn {
+  border-color: var(--primary-color);
+}
+
 header {
   padding: 1rem;
   display: flex;
@@ -51,13 +71,22 @@ header {
   color: var(--background-color);
 }
 
-.global-filter {
+.global-filter,
+.filter-btns {
   display: flex;
   gap: 1rem;
 }
 
-.filter-btns > * {
-  padding: 0.5rem;
+.filter-btn {
+  border-color: var(--background-color);
+  color: var(--background-color);
+  font-weight: 600;
+}
+
+.filter-btn:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background-color: var(--background-color);
 }
 
 #global-filter-text {
@@ -99,15 +128,13 @@ main {
 }
 
 .projects-filter button {
-  padding: 0.5rem;
   font-size: 1rem;
   font-weight: 500;
   text-align: left;
   background-color: transparent;
   color: var(--font-color);
   border: none;
-  border-radius: 0.3rem;
-  cursor: pointer;
+  border-radius: 0.33rem;
 }
 
 .projects-filter button:hover {
@@ -116,7 +143,7 @@ main {
 
 .projects-user-created {
   padding: 0.5rem;
-  border-radius: 0.3rem;
+  border-radius: 0.33rem;
 }
 
 .projects-items {
@@ -126,7 +153,6 @@ main {
 
 .projects-add-btn {
   margin-left: 0.75rem;
-  padding: 0.5rem;
   width: max-content;
 }
 
@@ -147,7 +173,7 @@ main {
   gap: 0.5rem;
   padding: 0.5rem;
   overflow-wrap: break-word;
-  border-radius: 0.3rem;
+  border-radius: 0.33rem;
   cursor: pointer;
 }
 
@@ -157,6 +183,10 @@ main {
 
 .project-item:hover {
   background-color: var(--highlight-color);
+}
+
+.project-item:active {
+  animation: shrink 0.2s ease-in;
 }
 
 .activeItem {
@@ -190,7 +220,7 @@ main {
   gap: 0.5rem;
 }
 
-.current-project-controlls > * {
+.current-project-sort {
   padding: 0.5rem;
 }
 
@@ -217,7 +247,7 @@ main {
   flex-direction: column;
   gap: 0.5rem;
   background-color: var(--secondary-color);
-  border-radius: 0.3rem;
+  border-radius: 0.33rem;
   overflow-wrap: break-word;
 }
 
@@ -238,7 +268,7 @@ main {
 
 .task-item-detail-view {
   background-color: var(--background-color);
-  border-radius: 0.3rem;
+  border-radius: 0.33rem;
 }
 
 .task-item-detail-view,
@@ -258,7 +288,8 @@ main {
 }
 
 .itemComplete {
-  opacity: 0.7;
+  opacity: 0.675;
+  text-decoration: line-through;
 }
 
 .new-project-container,
@@ -284,7 +315,7 @@ main {
   margin: 25vh auto;
   display: flex;
   flex-direction: column;
-  border-radius: 0.3rem;
+  border-radius: 0.33rem;
   box-shadow: 0.25rem 0.25rem 0.5rem var(--font-color-light);
 }
 
@@ -311,7 +342,7 @@ main {
   padding: 1rem;
   background-color: var(--primary-color);
   color: var(--background-color);
-  border-radius: 0.3rem 0.3rem 0 0;
+  border-radius: 0.33rem 0.33rem 0 0;
 }
 
 #task-form,
@@ -346,7 +377,8 @@ main {
   gap: 0.5rem;
 }
 
-.ok-btn, .cancel-btn {
+.ok-btn,
+.cancel-btn {
   justify-self: flex-end;
 }
 
@@ -372,7 +404,7 @@ main {
 
 @keyframes shrink {
   0% {
-    transform: scale(0.97);
+    transform: scale(0.975);
   }
   100% {
     transform: scale(1);
