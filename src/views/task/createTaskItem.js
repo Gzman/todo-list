@@ -44,6 +44,7 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
   $removeBtn.textContent = "Delete";
   $removeBtn.addEventListener("click", () => {
     ViewMediator.publish(ViewEvents.REMOVE_TASK, { projectTitle: $taskItem.dataset.project, title: $taskItem.dataset.task });
+    ViewMediator.unsubscribe(ViewEvents.EDIT_TASK, editTask);
     $taskItem.remove();
   });
 
@@ -74,7 +75,7 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
 
   $taskItem.append($normalView, $detailView);
 
-  ViewMediator.subscribe(ViewEvents.EDIT_TASK, ({ projectTitle, taskToEdit, title, description, dueDate, priority }) => {
+  function editTask({ projectTitle, taskToEdit, title, description, dueDate, priority }) {
     if (!($taskItem.dataset.project === projectTitle && $taskItem.dataset.task === taskToEdit)) {
       return;
     }
@@ -92,7 +93,9 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
     if (dueDate) {
       $dueDate.textContent = format(dueDate, DATE_FORMAT);
     }
-  });
+  }
+
+  ViewMediator.subscribe(ViewEvents.EDIT_TASK, editTask);
 
   return $taskItem;
 }

@@ -7,7 +7,7 @@ function createProjectItem(title) {
     $name.classList.add("project-item-name");
     $name.textContent = title;
 
-    const $counter = createCounter(title);
+    const { $counter, unsubscribeCounter } = createCounter(title);
 
     const $projectItem = document.createElement("div");
     $projectItem.classList.add("project-item");
@@ -28,6 +28,9 @@ function createProjectItem(title) {
 
     const remove = (title) => {
         if ($name.textContent === title) {
+            ViewMediator.unsubscribe(ViewEvents.GET_PROJECT, setActive);
+            ViewMediator.unsubscribe(ViewEvents.REMOVE_PROJECT, remove);
+            unsubscribeCounter();
             $projectItem.remove();
         }
     }
