@@ -38,8 +38,15 @@ h2 {
   font-size: 1.15rem;
 }
 
-button {
+button,
+select,
+input,
+label {
   padding: 0.5rem;
+}
+
+button,
+select {
   background-color: transparent;
   border: 0.175rem solid var(--font-color-light);
   border-radius: 0.33rem;
@@ -220,10 +227,6 @@ main {
   gap: 0.5rem;
 }
 
-.current-project-sort {
-  padding: 0.5rem;
-}
-
 .current-project-task-items {
   display: flex;
   flex-direction: column;
@@ -291,6 +294,10 @@ main {
 .task-item-detail-view {
   padding: 0.5rem;
   text-align: justify;
+}
+
+.task-item-description {
+  word-wrap: break-word;
 }
 
 .itemComplete {
@@ -368,12 +375,6 @@ main {
   justify-items: stretch;
 }
 
-#new-project-form > div > *,
-#task-form > div > *,
-#edit-task-form > div > * {
-  padding: 0.5rem;
-}
-
 .new-project-btn,
 .new-task-btn,
 .edit-task-btn {
@@ -410,7 +411,7 @@ main {
 
 @keyframes shrink {
   0% {
-    transform: scale(0.975);
+    transform: scale(0.98);
   }
   100% {
     transform: scale(1);
@@ -490,19 +491,12 @@ main {
   .task-item-date {
     justify-self: end;
   }
-  /* .task-item-controlls {
-    justify-self: end;
-  }
-  .task-item-date {
-    justify-self: end;
-    grid-column: span 3;
-    font-size: 0.9rem;
-  } */
   .task-item-controlls {
     justify-self: end;
     grid-column: span 3;
   }
-  .current-project-controlls > * {
+  .current-project-controlls > button,
+  .current-project-sort {
     padding: 0.25rem;
   }
   #new-project-form > div,
