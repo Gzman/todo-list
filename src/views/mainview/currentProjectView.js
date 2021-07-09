@@ -6,9 +6,9 @@ import { createTaskItem } from "../task/createTaskItem"
     const $content = document.querySelector(".main-view-content");
 
     ViewMediator.subscribe(ViewEvents.GET_PROJECT_RESP, ({ projectTitle, tasks }) => {
-        const $ProjectView = createProjectView(projectTitle, tasks);
+        const $projectView = createProjectView(projectTitle, tasks);
         $content.textContent = "";
-        $content.append($ProjectView);
+        $content.append($projectView);
     });
 
     ViewMediator.subscribe(ViewEvents.CREATE_TASK, ({ projectTitle, title, description, priority, dueDate }) => {

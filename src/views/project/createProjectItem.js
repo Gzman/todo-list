@@ -11,10 +11,17 @@ function createProjectItem(title) {
 
     const $projectItem = document.createElement("div");
     $projectItem.classList.add("project-item");
-    $projectItem.addEventListener("click", () => ViewMediator.publish(ViewEvents.GET_PROJECT, $name.textContent));
     $projectItem.append($name, $counter);
+    $projectItem.addEventListener("click", renderProjectView);
 
-    const setActive = (title) => {
+    ViewMediator.subscribe(ViewEvents.GET_PROJECT, renderProjectItemActive);
+    ViewMediator.subscribe(ViewEvents.REMOVE_PROJECT, removeProjectItem);
+
+    function renderProjectView() {
+        ViewMediator.publish(ViewEvents.GET_PROJECT, $name.textContent);
+    }
+
+    function renderProjectItemActive(title) {
         if (title === "Inbox") {
             const inbox = document.querySelector(".projects-inbox-btn");
             setItemActive(inbox);
@@ -26,17 +33,15 @@ function createProjectItem(title) {
         }
     }
 
-    const remove = (title) => {
+    function removeProjectItem(title) {
         if ($name.textContent === title) {
-            ViewMediator.unsubscribe(ViewEvents.GET_PROJECT, setActive);
-            ViewMediator.unsubscribe(ViewEvents.REMOVE_PROJECT, remove);
+            ViewMediator.unsubscribe(ViewEvents.GET_PROJECT, renderProjectItemActive);
+            ViewMediator.unsubscribe(ViewEvents.REMOVE_PROJECT, removeProjectItem);
             unsubscribeCounter();
+            $projectItem.removeEventListener("click", renderProjectView);
             $projectItem.remove();
         }
     }
-
-    ViewMediator.subscribe(ViewEvents.GET_PROJECT, setActive);
-    ViewMediator.subscribe(ViewEvents.REMOVE_PROJECT, remove);
 
     return $projectItem;
 }

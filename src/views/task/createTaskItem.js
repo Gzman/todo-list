@@ -4,32 +4,16 @@ import { DATE_FORMAT } from "../util";
 import { format } from "date-fns";
 
 function createTaskItem(projectTitle, { title, description, priority, dueDate, isComplete }) {
-  const $taskItem = document.createElement("div");
-  $taskItem.classList.add("task-item");
-  $taskItem.dataset.project = projectTitle;
-  $taskItem.dataset.task = title;
-
   const $isComplete = document.createElement("input");
   $isComplete.type = "checkbox";
   $isComplete.classList.add("task-item-complete");
   $isComplete.checked = isComplete;
-  if (isComplete) $taskItem.classList.add("itemComplete");
-  $isComplete.addEventListener("change", (event) => {
-    $taskItem.classList.toggle("itemComplete");
-    ViewMediator.publish(ViewEvents.EDIT_TASK, {
-      projectTitle: $taskItem.dataset.project,
-      taskToEdit: $taskItem.dataset.task,
-      title: $taskItem.dataset.task,
-      description: $description.textContent,
-      priority: extractPriority($taskItem),
-      dueDate: ($dueDate.value) ? new Date($dueDate.value) : null,
-      isComplete: event.currentTarget.checked
-    });
-  });
+  $isComplete.addEventListener("change", setTaskItemComplete);
 
   const $name = document.createElement("p");
   $name.classList.add("task-item-name");
   $name.textContent = title;
+  $name.addEventListener("click", renderDetailView);
 
   const $description = document.createElement("p");
   $description.classList.add("task-item-description");
@@ -42,25 +26,16 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
   const $removeBtn = document.createElement("button");
   $removeBtn.classList.add("task-item-delete");
   $removeBtn.textContent = "Delete";
-  $removeBtn.addEventListener("click", () => {
-    ViewMediator.publish(ViewEvents.REMOVE_TASK, { projectTitle: $taskItem.dataset.project, title: $taskItem.dataset.task });
-    ViewMediator.unsubscribe(ViewEvents.EDIT_TASK, editTask);
-    $taskItem.remove();
-  });
+  $removeBtn.addEventListener("click", removeTaskItem);
 
   const $editBtn = document.createElement("button");
   $editBtn.classList.add("task-item-edit");
   $editBtn.textContent = "Edit";
-  $editBtn.addEventListener("click", () => {
-    document.querySelector(".edit-task-container").classList.add("showItem");
-    ViewMediator.publish(ViewEvents.GET_TASK, { projectTitle: $taskItem.dataset.project, title: $taskItem.dataset.task });
-  });
+  $editBtn.addEventListener("click", renderEditTaskModal);
 
   const $controlls = document.createElement("div");
   $controlls.classList.add("task-item-controlls");
   $controlls.append($editBtn, $removeBtn);
-
-  $taskItem.classList.add(`priority-${priority}`);
 
   const $normalView = document.createElement("div");
   $normalView.classList.add("task-item-normal-view");
@@ -69,13 +44,18 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
   const $detailView = document.createElement("div");
   $detailView.classList.add("task-item-detail-view", "hideItem");
   $detailView.append($description);
-  $name.addEventListener("click", () => {
-    if ($description.textContent !== "") $detailView.classList.toggle("hideItem")
-  });
 
+  const $taskItem = document.createElement("div");
+  $taskItem.classList.add("task-item");
+  $taskItem.classList.add(`priority-${priority}`);
+  if (isComplete) $taskItem.classList.add("itemComplete");
+  $taskItem.dataset.project = projectTitle;
+  $taskItem.dataset.task = title;
   $taskItem.append($normalView, $detailView);
 
-  function editTask({ projectTitle, taskToEdit, title, description, dueDate, priority }) {
+  ViewMediator.subscribe(ViewEvents.EDIT_TASK, editTaskItem);
+
+  function editTaskItem({ projectTitle, taskToEdit, title, description, dueDate, priority }) {
     if (!($taskItem.dataset.project === projectTitle && $taskItem.dataset.task === taskToEdit)) {
       return;
     }
@@ -95,7 +75,38 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
     }
   }
 
-  ViewMediator.subscribe(ViewEvents.EDIT_TASK, editTask);
+  function setTaskItemComplete(event) {
+    $taskItem.classList.toggle("itemComplete");
+
+    ViewMediator.publish(ViewEvents.EDIT_TASK, {
+      projectTitle: $taskItem.dataset.project,
+      taskToEdit: $taskItem.dataset.task,
+      title: $taskItem.dataset.task,
+      description: $description.textContent,
+      priority: extractPriority($taskItem),
+      dueDate: ($dueDate.value) ? new Date($dueDate.value) : null,
+      isComplete: event.currentTarget.checked
+    });
+  }
+
+  function removeTaskItem() {
+    ViewMediator.publish(ViewEvents.REMOVE_TASK, { projectTitle: $taskItem.dataset.project, title: $taskItem.dataset.task });
+    $isComplete.removeEventListener("click", setTaskItemComplete);
+    $name.removeEventListener("click", renderDetailView);
+    $removeBtn.removeEventListener("click", removeTaskItem);
+    $editBtn.removeEventListener("click", renderEditTaskModal);
+    ViewMediator.unsubscribe(ViewEvents.EDIT_TASK, editTaskItem);
+    $taskItem.remove();
+  }
+
+  function renderEditTaskModal() {
+    document.querySelector(".edit-task-container").classList.add("showItem");
+    ViewMediator.publish(ViewEvents.GET_TASK, { projectTitle: $taskItem.dataset.project, title: $taskItem.dataset.task });
+  }
+
+  function renderDetailView() {
+    if ($description.textContent !== "") $detailView.classList.toggle("hideItem");
+  }
 
   return $taskItem;
 }
