@@ -3,7 +3,7 @@ import { Task } from "../buisness-logic/task"
 
 const randomDaysInTheFuture = (days) => {
     const randOffset = Math.floor(Math.random() * days);
-    const randomDate = new Date(); 
+    const randomDate = new Date();
     randomDate.setTime(Date.now() + (1000 * 60 * 60 * 24 * randOffset));
     return randomDate;
 }
@@ -13,6 +13,7 @@ const createExampleProjects = () => {
     example.tasks = [
         new Task("Grocery shopping", "Milk, apples, bananas, bread", randomDaysInTheFuture(3), "Low", true),
         new Task("Help moving", "Help a friend moving to munich", randomDaysInTheFuture(30), "Medium"),
+        new Task("Vacation", "Fly to the philippines", randomDaysInTheFuture(60), "Medium"),
     ];
 
     const homework = new Project("Homework");
@@ -29,6 +30,7 @@ const createExampleProjects = () => {
         new Task("Learn NoSql", "", randomDaysInTheFuture(20), "Medium"),
         new Task("Learn Design Patterns", "", randomDaysInTheFuture(22), "High"),
         new Task("Learn a Js framework", "", randomDaysInTheFuture(30), "Low"),
+        new Task("Learn WeakRef, WeakMap and WeakSet", "", randomDaysInTheFuture(6), "Low", true),
     ];
 
     return [example, homework, WebDevelopment];

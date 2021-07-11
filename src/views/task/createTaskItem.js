@@ -53,28 +53,6 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
   $taskItem.dataset.task = title;
   $taskItem.append($normalView, $detailView);
 
-  ViewMediator.subscribe(ViewEvents.EDIT_TASK, editTaskItem);
-
-  function editTaskItem({ projectTitle, taskToEdit, title, description, dueDate, priority }) {
-    if (!($taskItem.dataset.project === projectTitle && $taskItem.dataset.task === taskToEdit)) {
-      return;
-    }
-    if (title) {
-      $taskItem.dataset.task = title;
-      $name.textContent = title;
-    }
-    if (description) {
-      $description.textContent = description;
-    }
-    if (priority) {
-      taskPriorities.forEach((priority) => $taskItem.classList.remove(`priority-${priority}`));
-      $taskItem.classList.add(`priority-${priority}`);
-    }
-    if (dueDate) {
-      $dueDate.textContent = format(dueDate, DATE_FORMAT);
-    }
-  }
-
   function setTaskItemComplete(event) {
     $taskItem.classList.toggle("itemComplete");
 
@@ -91,11 +69,6 @@ function createTaskItem(projectTitle, { title, description, priority, dueDate, i
 
   function removeTaskItem() {
     ViewMediator.publish(ViewEvents.REMOVE_TASK, { projectTitle: $taskItem.dataset.project, title: $taskItem.dataset.task });
-    $isComplete.removeEventListener("click", setTaskItemComplete);
-    $name.removeEventListener("click", renderDetailView);
-    $removeBtn.removeEventListener("click", removeTaskItem);
-    $editBtn.removeEventListener("click", renderEditTaskModal);
-    ViewMediator.unsubscribe(ViewEvents.EDIT_TASK, editTaskItem);
     $taskItem.remove();
   }
 
@@ -118,5 +91,26 @@ function createTaskItems(projectTitle, tasks) {
 function extractPriority($taskItem) {
   return taskPriorities.find((priority) => $taskItem.className.includes(priority));
 }
+
+ViewMediator.subscribe(ViewEvents.EDIT_TASK, ({ projectTitle, taskToEdit, title, description, dueDate, priority }) => {
+  const $taskItem = document.querySelector(`.task-item[data-task="${taskToEdit}"][data-project="${projectTitle}"]`);
+  if (!$taskItem) {
+    return;
+  }
+  if (title) {
+    $taskItem.dataset.task = title;
+    $taskItem.querySelector(".task-item-name").textContent = title;
+  }
+  if (description) {
+    $taskItem.querySelector(".task-item-description").textContent = description;
+  }
+  if (priority) {
+    taskPriorities.forEach((priority) => $taskItem.classList.remove(`priority-${priority}`));
+    $taskItem.classList.add(`priority-${priority}`);
+  }
+  if (dueDate) {
+    $taskItem.querySelector(".task-item-date").textContent = format(dueDate, DATE_FORMAT);
+  }
+});
 
 export { createTaskItem, createTaskItems };

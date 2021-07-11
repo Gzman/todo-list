@@ -1,7 +1,7 @@
 
 function PubSub() {
     return {
-        events : {},
+        events: {},
 
         subscribe(event, handler) {
             if (!this.events[event]) {
@@ -17,9 +17,25 @@ function PubSub() {
         },
 
         publish(event, args) {
-            this.events[event]?.forEach(handler => handler(args));
+            this.events[event]?.forEach((handler) => handler(args));
         }
+
+        // subscribeAndAutoUnsubscribe(event, handler) {
+        //     this.subscribe(event, new WeakRef(handler));
+        // },
+
+        // publish(event, args) { // WeakRef caused problems, sometimes items wouldn't render
+        //     this.events[event]?.forEach((handler, index, self) => {
+        //         if (handler instanceof WeakRef) {
+        //             const actualHandler = handler.deref();
+        //             if (actualHandler) actualHandler(args);
+        //             else self.splice(index, 1);
+        //             return;
+        //         }
+        //         handler(args);
+        //     });
+        // }
     }
 }
 
-export {PubSub}
+export { PubSub }

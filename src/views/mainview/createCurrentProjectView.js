@@ -32,7 +32,6 @@ function createProjectView(projectTitle, tasks) {
       alert("Inbox can't be deleted.");
       return;
     }
-    $projectView.querySelectorAll(".task-item-delete")?.forEach((deleteBtn) => deleteBtn.dispatchEvent(new Event("click")));
     $projectView.remove();
     ViewMediator.publish(ViewEvents.REMOVE_PROJECT, projectTitle);
   });
